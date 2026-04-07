@@ -1,0 +1,135 @@
+{
+  "theme_and_archetype": {
+    "domain": "Portfolio / Tech Freelancer / Admin Dashboard",
+    "theme": "Dark",
+    "archetype": "Archetype 4: Swiss & High-Contrast (Adapted for Dark Mode)",
+    "mood": "Technical, robust, premium, precise, professional engineering."
+  },
+  "typography": {
+    "fonts": {
+      "headings": "Cabinet Grotesk",
+      "body": "IBM Plex Sans",
+      "mono": "JetBrains Mono"
+    },
+    "scale": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl tracking-tighter leading-none font-bold",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium",
+      "h3": "text-xl sm:text-2xl tracking-tight font-medium",
+      "body": "text-base leading-relaxed text-secondary",
+      "labels": "text-xs uppercase tracking-[0.2em] font-mono text-secondary"
+    },
+    "rules": [
+      "No generic sans (Inter/Roboto) for headings.",
+      "Headlines > 32px must use tracking-tight or tracking-tighter.",
+      "Labels/Overlines must be uppercase, tiny, and widely spaced."
+    ]
+  },
+  "colors": {
+    "background": {
+      "base": "#0A0A0A",
+      "surface": "#141414",
+      "surfaceHover": "#1C1C1C"
+    },
+    "text": {
+      "primary": "#FFFFFF",
+      "secondary": "#A3A3A3",
+      "disabled": "#525252"
+    },
+    "border": {
+      "default": "#262626",
+      "focus": "#FF2A00",
+      "light": "#333333"
+    },
+    "accent": {
+      "primary": "#FF2A00",
+      "primaryHover": "#CC2200",
+      "glow": "rgba(255, 42, 0, 0.5)"
+    },
+    "rules": [
+      "Never use pure black #000000 or #808080. Base is #0A0A0A.",
+      "Color is function only. 95% of UI is monochrome. Accent (#FF2A00) is used sparingly to guide action.",
+      "Hover text color must explicitly be set (e.g., hover:text-white)."
+    ]
+  },
+  "layout_and_spacing": {
+    "spacing_scale": ["p-4", "p-6", "p-8", "p-12", "p-16", "p-24", "p-32"],
+    "grid_strategy": {
+      "marketing": "MODE A (Tetris Grid). Asymmetry, visual tension, gap-8 to gap-12. Mix span sizes (col-span-full, col-span-4, col-span-2) to avoid perfect equal squares.",
+      "dashboard": "MODE B (Control Room). Strict hierarchy, gap-4 to gap-6. Dense and compact."
+    },
+    "surfaces": {
+      "cards": "Grid Borders (The Technical Look). border-collapse style. border-r border-b border-white/10. Flat backgrounds, no soft shadows.",
+      "header": "Crystal Glass variant. bg-black/60 with backdrop-blur-xl and delicate 1px border-white/10 on the bottom."
+    },
+    "rules": [
+      "Containers with borders MUST have internal padding (p-8 or p-12) to prevent text collision.",
+      "Use subgrid or ensure grid items are direct children of the grid container.",
+      "Max image height on mobile is 80vh."
+    ]
+  },
+  "components": {
+    "strategy": "Hybrid: HTML/Tailwind for creative marketing layouts (Hero, Bento Grid), heavily customized Shadcn UI for interactive elements (Forms, Calendar, Dialogs).",
+    "specifics": {
+      "buttons": "Sharp corners or max rounded-sm. 1px solid border. Hover states must increase brightness or fill.",
+      "forms": "Use Shadcn Input/Textarea/Select. Overwrite default styles to match technical dark mode (bg-[#141414] border-[#262626] focus:border-[#FF2A00]).",
+      "calendar": "Shadcn Calendar for appointment booking. Restyle selected day to #FF2A00.",
+      "portfolio_filters": "Mono typography tags. Active state gets a 1px border of #FF2A00 and white text.",
+      "icons": "Use @phosphor-icons/react for a dense, technical aesthetic."
+    }
+  },
+  "interactions_and_animations": {
+    "hover_states": "Crisp transitions. -translate-y-1 on cards with subtle border color shift to #FF2A00.",
+    "page_load": "Staggered fade-up for grid items.",
+    "accessibility": "Always respect prefers-reduced-motion. Focus rings must be highly visible (focus:ring-2 focus:ring-[#FF2A00] focus:ring-offset-2 focus:ring-offset-[#0A0A0A])."
+  },
+  "testing": {
+    "rules": [
+      "All interactive elements must include data-testid.",
+      "Format: kebab-case, role-based. Example: data-testid='contact-submit-button', data-testid='portfolio-filter-react'."
+    ]
+  },
+  "media": {
+    "rules": "ONLY use the provided images. Never use placeholders. Use object-cover for all images to maintain layout.",
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1762279389042-9439bfb6c155?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGRhcmslMjB0ZWNobm9sb2d5JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NzU1NzAyNDR8MA&ixlib=rb-4.1.0&q=85",
+        "category": "hero_background",
+        "description": "Abstract neon digital landscape for the main Hero section overlay."
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1753998943619-b9cd910887e5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHwyfHxjb21wdXRlciUyMHNjcmVlbiUyMHdpdGglMjBjb2RlJTIwZGFya3xlbnwwfHx8fDE3NzU1NzAyNDR8MA&ixlib=rb-4.1.0&q=85",
+        "category": "portfolio_project_1",
+        "description": "Code on screen - Use for 'Angular & React / C# Java' software projects."
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1559819615-9e8ae012d723?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwxfHxhcmR1aW5vJTIwaW90JTIwaGFyZHdhcmUlMjBlbGVjdHJvbmljcyUyMGRhcmt8ZW58MHx8fHwxNzc1NTcwMjQ0fDA&ixlib=rb-4.1.0&q=85",
+        "category": "portfolio_project_2",
+        "description": "Circuit board macro - Use for 'Arduino Domotics' projects."
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1720135885007-454165745e21?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1OTV8MHwxfHNlYXJjaHwyfHxkYXJrJTIwbW9kZSUyMHNvZnR3YXJlJTIwZGFzaGJvYXJkJTIwVUl8ZW58MHx8fHwxNzc1NTcwMjQ0fDA&ixlib=rb-4.1.0&q=85",
+        "category": "portfolio_project_3",
+        "description": "Dark mode software UI - Use for full-stack robust systems / dashboard projects."
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1765776830139-72b2184dae5a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzh8MHwxfHNlYXJjaHwyfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMG1hbiUyMGRhcmslMjBiYWNrZ3JvdW5kfGVufDB8fHx8MTc3NTU3MDIzMXww&ixlib=rb-4.1.0&q=85",
+        "category": "testimonial_avatar_1",
+        "description": "Male client professional headshot."
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1772987273687-4866382c146f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NjV8MHwxfHNlYXJjaHwyfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMHdvbWFuJTIwZGFyayUyMGJhY2tncm91bmR8ZW58MHx8fHwxNzc1NTcwMjMxfDA&ixlib=rb-4.1.0&q=85",
+        "category": "testimonial_avatar_2",
+        "description": "Female client professional headshot."
+      }
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Build the frontend using React, TailwindCSS, and Shadcn UI components.",
+    "Do NOT use 'Inter', 'Roboto', etc. for Headings. Stick to the provided typography.",
+    "The Hero Section should use the 'hero_background' image with a bg-black/50 overlay or subtle gradient to ensure text readability.",
+    "For the Portfolio Gallery, implement a filter system (e.g., 'All', 'React/Angular', 'Arduino/IoT', 'C#/Java') mapping to the project cards.",
+    "The Contact/Appointment section must include an interactive calendar (Shadcn Calendar).",
+    "The Admin Dashboard must be in the same Dark Swiss high-contrast theme, implementing CRUD for projects and appointment management views.",
+    "Ensure all interactive elements have data-testid attributes for testing."
+  ]
+}
