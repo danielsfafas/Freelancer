@@ -1,0 +1,77 @@
+# Freelancer — producción en DigitalOcean (www.danysolutions.online)
+# Convivencia con NetosPio: web solo en 127.0.0.1:9090 (nginx del host hace TLS).
+#
+#   cd /opt/freelancer
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# No publicar 80/443 desde este compose. No usar puertos 9082/9083/8788/8081.
+
+name: freelancer
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: freelancer-mongodb
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "mongodb://127.0.0.1:27017/test", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - freelancer
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: freelancer-backend:prod
+    pull_policy: build
+    container_name: freelancer-backend
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      MONGO_URL: mongodb://mongo:27017
+      DB_NAME: ${DB_NAME:-freelancer}
+      JWT_SECRET: ${JWT_SECRET}
+      FRONTEND_URL: ${FRONTEND_URL:-https://www.danysolutions.online}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@danielortega.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin123!}
+    volumes:
+      - backend_uploads:/app/uploads
+    networks:
+      - freelancer
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_BACKEND_URL: ""
+    image: freelancer-web:prod
+    pull_policy: build
+    container_name: freelancer-web
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "127.0.0.1:9090:80"
+    networks:
+      - freelancer
+
+networks:
+  freelancer:
+    name: freelancer-net
+
+volumes:
+  mongo_data:
+    name: freelancer_mongodb_data
+  backend_uploads:
+    name: freelancer_backend_uploads

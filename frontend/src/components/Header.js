@@ -1,15 +1,44 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Code2, Terminal } from 'lucide-react';
+import axios from 'axios';
+import { useBranding, resolveMediaUrl } from '../context/BrandingContext';
+
+const API_URL = process.env.REACT_APP_BACKEND_URL || '';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [hasTestimonials, setHasTestimonials] = useState(true);
   const location = useLocation();
+  const { profile, logoUrl } = useBranding();
+  const brandName = profile?.name?.trim() || 'Daniel.Ortega';
+  const [firstName, ...restName] = brandName.replace(/\./g, ' ').split(/\s+/).filter(Boolean);
+  const displayFirst = firstName || 'Daniel';
+  const displayRest = restName.length ? restName.join(' ') : 'Ortega';
+  const resolvedLogo = logoUrl ? resolveMediaUrl(logoUrl) : '';
+
+  useEffect(() => {
+    let cancelled = false;
+    const checkTestimonials = async () => {
+      try {
+        const { data } = await axios.get(`${API_URL}/api/testimonials`);
+        if (!cancelled) setHasTestimonials(Array.isArray(data) && data.length > 0);
+      } catch {
+        if (!cancelled) setHasTestimonials(true);
+      }
+    };
+    checkTestimonials();
+    return () => {
+      cancelled = true;
+    };
+  }, [location.pathname]);
 
   const navLinks = [
     { href: '/#services', label: 'Servicios' },
     { href: '/#portfolio', label: 'Portafolio' },
-    { href: '/#testimonials', label: 'Testimonios' },
+    hasTestimonials
+      ? { href: '/#testimonials', label: 'Testimonios' }
+      : { href: '/admin/reviews?new=1', label: 'Agregar testimonio' },
     { href: '/#contact', label: 'Contacto' },
     { href: '/schedule', label: 'Agendar' },
   ];
@@ -17,6 +46,9 @@ export default function Header() {
   const isActive = (href) => {
     if (href.startsWith('/#')) {
       return location.pathname === '/' && location.hash === href.substring(1);
+    }
+    if (href.startsWith('/admin/reviews')) {
+      return location.pathname === '/admin/reviews';
     }
     return location.pathname === href;
   };
@@ -44,11 +76,15 @@ export default function Header() {
             className="flex items-center gap-2 group"
             data-testid="header-logo"
           >
-            <div className="w-10 h-10 flex items-center justify-center border border-[#262626] bg-[#141414] group-hover:border-[#FF2A00] transition-colors">
-              <Terminal className="w-5 h-5 text-[#FF2A00]" />
+            <div className="w-10 h-10 flex items-center justify-center border border-[#262626] bg-[#141414] group-hover:border-[#FF2A00] transition-colors overflow-hidden">
+              {resolvedLogo ? (
+                <img src={resolvedLogo} alt={brandName} className="w-full h-full object-contain p-1" />
+              ) : (
+                <Terminal className="w-5 h-5 text-[#FF2A00]" />
+              )}
             </div>
             <span className="font-bold text-lg tracking-tight hidden sm:block">
-              Daniel<span className="text-[#FF2A00]">.</span>Ortega
+              {displayFirst}<span className="text-[#FF2A00]">.</span>{displayRest}
             </span>
           </Link>
 
@@ -62,7 +98,7 @@ export default function Header() {
                 className={`text-sm font-medium transition-colors hover:text-[#FF2A00] ${
                   isActive(link.href) ? 'text-[#FF2A00]' : 'text-[#A3A3A3]'
                 }`}
-                data-testid={`nav-link-${link.label.toLowerCase()}`}
+                data-testid={`nav-link-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
               >
                 {link.label}
               </Link>

@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, FolderKanban, Calendar, MessageSquare, 
-  Settings, LogOut, Menu, X, Terminal, ChevronRight 
+  Star, Settings, LogOut, Menu, X, Terminal, ChevronRight 
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useBranding, resolveMediaUrl } from '../context/BrandingContext';
 
 const navItems = [
   { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/admin/projects', label: 'Proyectos', icon: FolderKanban },
+  { path: '/admin/reviews', label: 'Reseñas', icon: Star },
   { path: '/admin/appointments', label: 'Citas', icon: Calendar },
   { path: '/admin/messages', label: 'Mensajes', icon: MessageSquare },
   { path: '/admin/settings', label: 'Configuración', icon: Settings },
@@ -18,7 +20,10 @@ export default function AdminLayout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  const { profile, logoUrl } = useBranding();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const brandName = profile?.name?.trim() || 'Daniel.Ortega';
+  const resolvedLogo = logoUrl ? resolveMediaUrl(logoUrl) : '';
 
   useEffect(() => {
     setSidebarOpen(false);
@@ -51,10 +56,14 @@ export default function AdminLayout({ children }) {
         {/* Logo */}
         <div className="h-16 flex items-center justify-between px-6 border-b border-[#262626]">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 flex items-center justify-center border border-[#262626]">
-              <Terminal className="w-4 h-4 text-[#FF2A00]" />
+            <div className="w-8 h-8 flex items-center justify-center border border-[#262626] overflow-hidden">
+              {resolvedLogo ? (
+                <img src={resolvedLogo} alt={brandName} className="w-full h-full object-contain p-0.5" />
+              ) : (
+                <Terminal className="w-4 h-4 text-[#FF2A00]" />
+              )}
             </div>
-            <span className="font-bold text-sm">Daniel.Ortega</span>
+            <span className="font-bold text-sm">{brandName.replace(/\s+/g, '.')}</span>
           </Link>
           <button 
             onClick={() => setSidebarOpen(false)}

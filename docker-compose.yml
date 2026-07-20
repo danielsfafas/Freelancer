@@ -1,0 +1,82 @@
+# Freelancer stack (EC2) — no mezcla con podoclinic / equiposantana.
+#
+# IMPORTANTE: ejecutar desde la carpeta del repo que SÍ tenga backend/ y frontend/
+#   cd /ruta/al/Freelancer
+#   docker compose up -d --build
+# Si ves "path .../backend not found", estás en un directorio incorrecto o falta clonar el repo completo.
+#
+# Imágenes solo locales (sin danielortegalozano/... en Docker Hub → no intenta pull remoto).
+# Contenedores: freelancer-mongodb, freelancer-backend, freelancer-web
+#
+# Acceso: http://18.223.169.235:9000
+#
+# .env opcional: JWT_SECRET=...
+
+name: freelancer
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: freelancer-mongodb
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "mongodb://127.0.0.1:27017/test", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - freelancer
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    # Nombre local (sin usuario Docker Hub) para que Compose no intente pull del registro
+    image: danielortegalozano/freelancer-backend:ec2
+    pull_policy: build
+    container_name: freelancer-backend
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      MONGO_URL: mongodb://mongo:27017
+      DB_NAME: ${DB_NAME:-freelancer}
+      JWT_SECRET: ${JWT_SECRET:-change-me-to-a-long-random-secret}
+      FRONTEND_URL: ${FRONTEND_URL:-http://18.223.169.235:9000}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@danielortega.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin123!}
+    volumes:
+      - backend_uploads:/app/uploads
+    networks:
+      - freelancer
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_BACKEND_URL: ""
+    image: danielortegalozano/freelancer-web:ec2
+    pull_policy: build
+    container_name: freelancer-web
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "9000:80"
+    networks:
+      - freelancer
+
+networks:
+  freelancer:
+    name: freelancer-net
+
+volumes:
+  mongo_data:
+    name: freelancer_mongodb_data
+  backend_uploads:
+    name: freelancer_backend_uploads

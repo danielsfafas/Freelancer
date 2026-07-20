@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
-import { Save, User, Globe, Home, Building2, Database, Users } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Save, User, Globe, Home, Building2, Database, Users, Upload, ImageIcon, X, Loader2 } from 'lucide-react';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Button } from '../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { useBranding, resolveMediaUrl } from '../context/BrandingContext';
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+const API_URL = process.env.REACT_APP_BACKEND_URL || '';
 
 const iconOptions = [
   { value: 'globe', label: 'Web', icon: Globe },
@@ -18,6 +19,7 @@ const iconOptions = [
 ];
 
 export default function AdminSettings() {
+  const { refresh: refreshBranding } = useBranding();
   const [profile, setProfile] = useState({
     name: '',
     title: '',
@@ -27,11 +29,14 @@ export default function AdminSettings() {
     location: '',
     skills: [],
     social: { github: '', linkedin: '' },
+    logo_url: '',
   });
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
   const [skillInput, setSkillInput] = useState('');
+  const logoInputRef = useRef(null);
 
   const token = localStorage.getItem('token');
   const headers = { Authorization: `Bearer ${token}` };
@@ -43,7 +48,11 @@ export default function AdminSettings() {
           axios.get(`${API_URL}/api/profile`),
           axios.get(`${API_URL}/api/services`),
         ]);
-        setProfile(profileRes.data);
+        setProfile({
+          social: { github: '', linkedin: '' },
+          logo_url: '',
+          ...profileRes.data,
+        });
         setServices(servicesRes.data);
       } catch (error) {
         console.error('Error fetching settings:', error);
@@ -92,10 +101,31 @@ export default function AdminSettings() {
     });
   };
 
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (e.target) e.target.value = '';
+    if (!file) return;
+    setUploadingLogo(true);
+    try {
+      const form = new FormData();
+      form.append('file', file);
+      const { data } = await axios.post(`${API_URL}/api/upload`, form, {
+        headers: { ...headers, 'Content-Type': 'multipart/form-data' },
+      });
+      setProfile((prev) => ({ ...prev, logo_url: data.url }));
+      toast.success('Logo subido. Guarda el perfil para aplicarlo.');
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'No se pudo subir el logo');
+    } finally {
+      setUploadingLogo(false);
+    }
+  };
+
   const saveProfile = async () => {
     setSaving(true);
     try {
       await axios.put(`${API_URL}/api/profile`, profile, { headers });
+      await refreshBranding();
       toast.success('Perfil actualizado');
     } catch (error) {
       toast.error('Error al guardar el perfil');
@@ -154,6 +184,70 @@ export default function AdminSettings() {
             <div className="flex items-center gap-3 mb-6">
               <User className="w-5 h-5 text-[#FF2A00]" />
               <h2 className="font-bold">Información Personal</h2>
+            </div>
+
+            <div className="mb-8 p-4 border border-[#262626] bg-[#0A0A0A]">
+              <label className="text-xs font-mono uppercase tracking-widest text-[#525252] mb-2 block">
+                Logotipo / icono de pestaña
+              </label>
+              <p className="text-xs text-[#737373] mb-4">
+                Se usa en la barra de navegación y como favicon en la pestaña del navegador.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 items-start">
+                <div className="w-24 h-24 border border-[#262626] bg-[#141414] flex items-center justify-center overflow-hidden shrink-0">
+                  {profile.logo_url ? (
+                    <img
+                      src={resolveMediaUrl(profile.logo_url)}
+                      alt="Logo"
+                      className="w-full h-full object-contain p-2"
+                    />
+                  ) : (
+                    <ImageIcon className="w-8 h-8 text-[#525252]" />
+                  )}
+                </div>
+                <div className="flex-1 space-y-3 w-full">
+                  <Input
+                    name="logo_url"
+                    value={profile.logo_url || ''}
+                    onChange={handleProfileChange}
+                    placeholder="URL del logo o sube un archivo"
+                    className="bg-[#0A0A0A] border-[#262626] text-white focus:border-[#FF2A00] rounded-none"
+                  />
+                  <div className="flex flex-wrap gap-2">
+                    <input
+                      ref={logoInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/gif,image/webp,.jpg,.jpeg,.png,.gif,.webp"
+                      className="hidden"
+                      onChange={handleLogoUpload}
+                      disabled={uploadingLogo}
+                    />
+                    <Button
+                      type="button"
+                      onClick={() => logoInputRef.current?.click()}
+                      disabled={uploadingLogo}
+                      className="bg-[#262626] hover:bg-[#333] text-white rounded-none"
+                    >
+                      {uploadingLogo ? (
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      ) : (
+                        <Upload className="w-4 h-4 mr-2" />
+                      )}
+                      Subir imagen
+                    </Button>
+                    {profile.logo_url ? (
+                      <Button
+                        type="button"
+                        onClick={() => setProfile((prev) => ({ ...prev, logo_url: '' }))}
+                        className="bg-transparent border border-[#262626] hover:border-[#FF2A00] text-[#A3A3A3] hover:text-[#FF2A00] rounded-none"
+                      >
+                        <X className="w-4 h-4 mr-2" />
+                        Quitar
+                      </Button>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -1,6 +1,7 @@
 import "@/index.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { BrandingProvider } from "./context/BrandingContext";
 import { Toaster } from "./components/ui/sonner";
 
 // Pages
@@ -11,6 +12,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminProjects from "./pages/AdminProjects";
 import AdminAppointments from "./pages/AdminAppointments";
 import AdminMessages from "./pages/AdminMessages";
+import AdminReviews from "./pages/AdminReviews";
 import AdminSettings from "./pages/AdminSettings";
 
 // Layout
@@ -94,6 +96,14 @@ function AppRoutes() {
         }
       />
       <Route
+        path="/admin/reviews"
+        element={
+          <ProtectedRoute>
+            <AdminReviews />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/admin/settings"
         element={
           <ProtectedRoute>
@@ -111,19 +121,21 @@ function AppRoutes() {
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <AppRoutes />
-        <Toaster 
-          position="top-right"
-          toastOptions={{
-            style: {
-              background: '#141414',
-              border: '1px solid #262626',
-              color: '#FFFFFF',
-            },
-          }}
-        />
-      </AuthProvider>
+      <BrandingProvider>
+        <AuthProvider>
+          <AppRoutes />
+          <Toaster 
+            position="top-right"
+            toastOptions={{
+              style: {
+                background: '#141414',
+                border: '1px solid #262626',
+                color: '#FFFFFF',
+              },
+            }}
+          />
+        </AuthProvider>
+      </BrandingProvider>
     </BrowserRouter>
   );
 }

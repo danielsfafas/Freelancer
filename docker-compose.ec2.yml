@@ -1,0 +1,65 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: freelancer-ec2-mongodb
+    restart: unless-stopped
+    volumes:
+      - freelancer_ec2_mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "mongodb://127.0.0.1:27017/test", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - freelancer_ec2_net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: danielortegalozano/freelancer-backend:ec2
+    container_name: freelancer-ec2-backend
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      MONGO_URL: mongodb://mongo:27017
+      DB_NAME: ${DB_NAME:-freelancer}
+      JWT_SECRET: ${JWT_SECRET:-change-me-to-a-long-random-secret}
+      FRONTEND_URL: ${FRONTEND_URL:-http://3.14.10.8:9000}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@danielortega.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin123!}
+    volumes:
+      - freelancer_ec2_backend_uploads:/app/uploads
+    ports:
+      - "9001:8000"
+    networks:
+      - freelancer_ec2_net
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_BACKEND_URL: ""
+    image: danielortegalozano/freelancer-web:ec2
+    container_name: freelancer-ec2-web
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "9000:80"
+    networks:
+      - freelancer_ec2_net
+
+networks:
+  freelancer_ec2_net:
+    name: freelancer-ec2-net
+
+volumes:
+  freelancer_ec2_mongo_data:
+    name: freelancer_ec2_mongo_data
+  freelancer_ec2_backend_uploads:
+    name: freelancer_ec2_backend_uploads

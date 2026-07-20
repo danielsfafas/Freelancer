@@ -156,6 +156,14 @@ class TestimonialCreate(BaseModel):
     image_url: Optional[str] = None
     rating: int = 5
 
+class TestimonialUpdate(BaseModel):
+    name: Optional[str] = None
+    company: Optional[str] = None
+    role: Optional[str] = None
+    content: Optional[str] = None
+    image_url: Optional[str] = None
+    rating: Optional[int] = None
+
 class ServiceUpdate(BaseModel):
     title: str
     description: str
@@ -312,7 +320,20 @@ async def create_testimonial(testimonial: TestimonialCreate, user: dict = Depend
     testimonial_dict["created_at"] = datetime.now(timezone.utc).isoformat()
     
     await db.testimonials.insert_one(testimonial_dict)
+    testimonial_dict.pop("_id", None)
     return testimonial_dict
+
+@api_router.put("/testimonials/{testimonial_id}")
+async def update_testimonial(testimonial_id: str, testimonial: TestimonialUpdate, user: dict = Depends(get_current_user)):
+    update_data = {k: v for k, v in testimonial.model_dump().items() if v is not None}
+    update_data["updated_at"] = datetime.now(timezone.utc).isoformat()
+
+    result = await db.testimonials.update_one({"id": testimonial_id}, {"$set": update_data})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Testimonial not found")
+
+    updated = await db.testimonials.find_one({"id": testimonial_id}, {"_id": 0})
+    return updated
 
 @api_router.delete("/testimonials/{testimonial_id}")
 async def delete_testimonial(testimonial_id: str, user: dict = Depends(get_current_user)):
@@ -365,7 +386,8 @@ async def get_profile():
             "social": {
                 "github": "https://github.com/danielortega",
                 "linkedin": "https://linkedin.com/in/danielortega"
-            }
+            },
+            "logo_url": None,
         }
     return profile
 
@@ -373,6 +395,8 @@ async def get_profile():
 async def update_profile(profile: dict, user: dict = Depends(get_current_user)):
     await db.profile.delete_many({})
     await db.profile.insert_one(profile)
+    # insert_one mutates the dict in place with _id: ObjectId, which is not JSON-serializable
+    profile.pop("_id", None)
     return profile
 
 # File Upload Endpoint
@@ -385,8 +409,9 @@ async def upload_file(file: UploadFile = File(...), user: dict = Depends(get_cur
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     
-    backend_url = os.environ.get("FRONTEND_URL", "").replace("https://", "https://")
-    file_url = f"{backend_url}/api/uploads/{file_name}"
+    backend_url = os.environ.get("FRONTEND_URL", "").rstrip("/")
+    # Servido por StaticFiles en /uploads (nginx también proxea /uploads/)
+    file_url = f"{backend_url}/uploads/{file_name}" if backend_url else f"/uploads/{file_name}"
     
     return {"url": file_url, "filename": file_name}
 
@@ -469,74 +494,85 @@ async def startup_event():
         f.write(f"- POST /api/auth/logout\n")
         f.write(f"- GET /api/auth/me\n")
     
-    # Seed sample projects if none exist
-    if await db.projects.count_documents({}) == 0:
-        sample_projects = [
+    # Seed portfolio projects (clientes reales Dany Solutions)
+    portfolio_seed = [
             {
-                "id": str(uuid.uuid4()),
-                "title": "Sistema de Gestión Empresarial",
-                "description": "Aplicación web completa para gestión de inventario, ventas y reportes. Desarrollado con Angular en el frontend y C# ASP.NET Core en el backend.",
-                "technologies": ["Angular", "C#", "SQL Server", "Azure"],
+                "id": "proj-podologia",
+                "title": "PodoclinicAM",
+                "description": "Sitio web y sistema de citas para clínica de podología: agenda en línea, panel administrativo y recordatorios.",
+                "technologies": ["React", "FastAPI", "MongoDB", "WhatsApp"],
                 "category": "web",
-                "image_url": "https://images.unsplash.com/photo-1720135885007-454165745e21?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1OTV8MHwxfHNlYXJjaHwyfHxkYXJrJTIwbW9kZSUyMHNvZnR3YXJlJTIwZGFzaGJvYXJkJTIwVUl8ZW58MHx8fHwxNzc1NTcwMjQ0fDA&ixlib=rb-4.1.0&q=85",
-                "demo_url": "https://demo.example.com",
-                "github_url": "https://github.com/example",
+                "image_url": "/portfolio-logos/podologia.png",
+                "demo_url": "https://podologia.danysolutions.online/",
+                "github_url": None,
                 "featured": True,
-                "created_at": datetime.now(timezone.utc).isoformat(),
-                "updated_at": datetime.now(timezone.utc).isoformat()
             },
             {
-                "id": str(uuid.uuid4()),
-                "title": "Sistema de Domótica Inteligente",
-                "description": "Control automatizado del hogar con sensores Arduino, integración con Alexa y dashboard en tiempo real para monitoreo de consumo energético.",
-                "technologies": ["Arduino", "React", "Node.js", "MQTT", "MongoDB"],
-                "category": "iot",
-                "image_url": "https://images.unsplash.com/photo-1559819615-9e8ae012d723?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwxfHxhcmR1aW5vJTIwaW90JTIwaGFyZHdhcmUlMjBlbGVjdHJvbmljcyUyMGRhcmt8ZW58MHx8fHwxNzc1NTcwMjQ0fDA&ixlib=rb-4.1.0&q=85",
-                "featured": True,
-                "created_at": datetime.now(timezone.utc).isoformat(),
-                "updated_at": datetime.now(timezone.utc).isoformat()
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "title": "E-Commerce Platform",
-                "description": "Plataforma de comercio electrónico con carrito de compras, pasarela de pagos y sistema de inventario integrado.",
-                "technologies": ["React", "Java", "Spring Boot", "PostgreSQL"],
+                "id": "proj-rehabilita",
+                "title": "Rehabilitá",
+                "description": "Plataforma web para clínica de fisioterapia con agenda de citas, servicios, productos y gestión administrativa.",
+                "technologies": ["React", "FastAPI", "MongoDB", "WhatsApp"],
                 "category": "web",
-                "image_url": "https://images.unsplash.com/photo-1753998943619-b9cd910887e5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHwyfHxjb21wdXRlciUyMHNjcmVlbiUyMHdpdGglMjBjb2RlJTIwZGFya3xlbnwwfHx8fDE3NzU1NzAyNDR8MA&ixlib=rb-4.1.0&q=85",
+                "image_url": "/portfolio-logos/rehabilita.png",
+                "demo_url": "https://rehabilita.danysolutions.online/",
+                "github_url": None,
                 "featured": True,
-                "created_at": datetime.now(timezone.utc).isoformat(),
-                "updated_at": datetime.now(timezone.utc).isoformat()
-            }
-        ]
-        await db.projects.insert_many(sample_projects)
-        logger.info("Sample projects seeded")
-    
-    # Seed sample testimonials if none exist
-    if await db.testimonials.count_documents({}) == 0:
-        sample_testimonials = [
-            {
-                "id": str(uuid.uuid4()),
-                "name": "Carlos Méndez",
-                "company": "TechCorp Solutions",
-                "role": "CTO",
-                "content": "Daniel desarrolló nuestro sistema de gestión empresarial. Su conocimiento técnico y profesionalismo superaron nuestras expectativas.",
-                "image_url": "https://images.unsplash.com/photo-1765776830139-72b2184dae5a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzh8MHwxfHNlYXJjaHwyfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMG1hbiUyMGRhcmslMjBiYWNrZ3JvdW5kfGVufDB8fHx8MTc3NTU3MDIzMXww&ixlib=rb-4.1.0&q=85",
-                "rating": 5,
-                "created_at": datetime.now(timezone.utc).isoformat()
             },
             {
-                "id": str(uuid.uuid4()),
-                "name": "Ana García",
-                "company": "Smart Home MX",
-                "role": "Directora de Operaciones",
-                "content": "El sistema de domótica que Daniel implementó transformó completamente nuestra oferta de servicios. Altamente recomendado.",
-                "image_url": "https://images.unsplash.com/photo-1772987273687-4866382c146f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NjV8MHwxfHNlYXJjaHwyfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMHdvbWFuJTIwZGFyayUyMGJhY2tncm91bmR8ZW58MHx8fHwxNzc1NTcwMjMxfDA&ixlib=rb-4.1.0&q=85",
-                "rating": 5,
-                "created_at": datetime.now(timezone.utc).isoformat()
-            }
+                "id": "proj-moralesbox",
+                "title": "Morales Box",
+                "description": "Sitio web para gimnasio de boxeo: paquetes, productos, eventos y registro de usuarios.",
+                "technologies": ["React", "FastAPI", "MongoDB", "Stripe"],
+                "category": "web",
+                "image_url": "/portfolio-logos/moralesbox.png",
+                "demo_url": "https://moralesbox.danysolutions.online/",
+                "github_url": None,
+                "featured": True,
+            },
+            {
+                "id": "proj-lozmar",
+                "title": "Lozmar",
+                "description": "Sistema web empresarial a medida para operación y gestión del negocio.",
+                "technologies": ["React", "Node.js", "PostgreSQL"],
+                "category": "enterprise",
+                "image_url": "/portfolio-logos/lozmar.svg",
+                "demo_url": "https://lozmar.danysolutions.online/",
+                "github_url": None,
+                "featured": True,
+            },
+            {
+                "id": "proj-pancitapio",
+                "title": "Pancita Pio",
+                "description": "Sistema de restaurante para taquería de carnitas: menú, comandas, caja, cocina e pedidos por WhatsApp con IA.",
+                "technologies": ["React", "Node.js", "PostgreSQL", "WhatsApp", "IA"],
+                "category": "web",
+                "image_url": "/portfolio-logos/pancitapio.png",
+                "demo_url": "https://pancitapio.danysolutions.online/",
+                "github_url": None,
+                "featured": True,
+            },
+            {
+                "id": "proj-ambar",
+                "title": "Carnitas Ambar",
+                "description": "Plataforma de restaurante para carnitas: pedidos por mesa, WhatsApp, cocina, caja e impresión térmica.",
+                "technologies": ["React", "Node.js", "PostgreSQL", "WhatsApp", "IA"],
+                "category": "web",
+                "image_url": "/portfolio-logos/ambar.png",
+                "demo_url": "https://ambar.danysolutions.online/",
+                "github_url": None,
+                "featured": True,
+            },
         ]
-        await db.testimonials.insert_many(sample_testimonials)
-        logger.info("Sample testimonials seeded")
+    # Solo inserta proyectos que no existan. Nunca sobrescribe ediciones del admin en redeploy.
+    now = datetime.now(timezone.utc).isoformat()
+    inserted = 0
+    for project in portfolio_seed:
+        existing = await db.projects.find_one({"id": project["id"]}, {"_id": 1})
+        if existing:
+            continue
+        await db.projects.insert_one({**project, "created_at": now, "updated_at": now})
+        inserted += 1
+    logger.info("Portfolio seed: %s nuevos, %s ya existían (sin modificar)", inserted, len(portfolio_seed) - inserted)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
