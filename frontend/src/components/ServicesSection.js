@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Globe, Home, Building2, Database, Users } from 'lucide-react';
 import axios from 'axios';
-
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+import { API_URL } from '../lib/apiBase';
 
 const iconMap = {
   globe: Globe,
@@ -53,8 +52,8 @@ export default function ServicesSection() {
             <span className="text-[#FF2A00]">a tu medida</span>
           </h2>
           <p className="text-[#A3A3A3] text-lg">
-            Ofrezco servicios especializados en desarrollo de software, 
-            automatización y consultoría técnica.
+            Desarrollo web, IoT y consultoría full stack desde Tepeapulco Hidalgo
+            (área Hidalgo): software a medida, automatización y asesoría técnica.
           </p>
         </div>
 

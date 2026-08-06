@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { Star, Quote } from 'lucide-react';
 import axios from 'axios';
 import { resolveProjectMediaUrl } from '../lib/projectMedia';
-
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+import { API_URL } from '../lib/apiBase';
 
 export default function TestimonialsSection() {
   const [testimonials, setTestimonials] = useState([]);

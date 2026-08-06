@@ -1,8 +1,9 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
+import { API_URL } from '../lib/apiBase';
 
-const API_URL = process.env.REACT_APP_BACKEND_URL || '';
-export const DEFAULT_PAGE_TITLE = 'Portfolio | Daniel Ortega';
+export const DEFAULT_PAGE_TITLE =
+  'Desarrollador web y IoT en Tepeapulco Hidalgo | Daniel Ortega — Dany Solutions';
 
 function iconMimeFromHref(href) {
   const path = href.split(/[?#]/)[0].toLowerCase();
@@ -82,7 +83,7 @@ export function BrandingProvider({ children }) {
 
   useEffect(() => {
     const title = profile?.name?.trim()
-      ? `${profile.name.trim()} | Portfolio`
+      ? `${profile.name.trim()} | Desarrollador web Tepeapulco Hidalgo`
       : DEFAULT_PAGE_TITLE;
     document.title = title;
 

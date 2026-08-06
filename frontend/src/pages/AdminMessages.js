@@ -4,8 +4,7 @@ import { Button } from '../components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import axios from 'axios';
 import { toast } from 'sonner';
-
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+import { API_URL } from '../lib/apiBase';
 
 export default function AdminMessages() {
   const [messages, setMessages] = useState([]);

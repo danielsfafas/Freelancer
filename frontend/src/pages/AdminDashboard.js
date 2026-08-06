@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FolderKanban, Calendar, MessageSquare, TrendingUp, Clock, Users } from 'lucide-react';
 import axios from 'axios';
-
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+import { API_URL } from '../lib/apiBase';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({

@@ -5,8 +5,7 @@ import { Textarea } from '../components/ui/textarea';
 import { Button } from '../components/ui/button';
 import axios from 'axios';
 import { toast } from 'sonner';
-
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+import { API_URL } from '../lib/apiBase';
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -53,8 +52,8 @@ export default function ContactSection() {
               <span className="text-[#FF2A00]">en mente?</span>
             </h2>
             <p className="text-[#A3A3A3] text-lg mb-10">
-              Escríbeme y conversemos sobre cómo puedo ayudarte a 
-              materializar tus ideas en soluciones tecnológicas.
+              Escríbeme desde Tepeapulco Hidalgo o cualquier parte del área Hidalgo
+              y conversemos cómo materializar tu proyecto en soluciones tecnológicas.
             </p>
 
             <div className="space-y-6">
@@ -90,7 +89,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <p className="text-xs font-mono uppercase tracking-widest text-[#525252] mb-1">Ubicación</p>
-                  <span className="text-white">Ciudad de México</span>
+                  <span className="text-white">Tepeapulco, Hidalgo</span>
                 </div>
               </div>
             </div>

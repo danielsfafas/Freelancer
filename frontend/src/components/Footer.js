@@ -21,8 +21,8 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-[#A3A3A3] text-sm leading-relaxed mb-6">
-              Desarrollador Full Stack especializado en crear soluciones tecnológicas 
-              robustas y escalables para empresas de todos los tamaños.
+              Desarrollador web e IoT en Tepeapulco Hidalgo. Soluciones full stack
+              robustas y escalables para empresas del área Hidalgo y todo México.
             </p>
             <div className="flex gap-4">
               <a
@@ -99,7 +99,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <MapPin className="w-4 h-4 text-[#FF2A00]" />
-                <span className="text-[#A3A3A3] text-sm">Ciudad de México</span>
+                <span className="text-[#A3A3A3] text-sm">Tepeapulco, Hidalgo</span>
               </li>
             </ul>
           </div>

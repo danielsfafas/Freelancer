@@ -6,8 +6,7 @@ import { Textarea } from '../components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import axios from 'axios';
 import { toast } from 'sonner';
-
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+import { API_URL } from '../lib/apiBase';
 
 const statusOptions = [
   { value: 'pending', label: 'Pendiente', color: 'text-yellow-500 bg-yellow-500/10 border-yellow-500/20' },

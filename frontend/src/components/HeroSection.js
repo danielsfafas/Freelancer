@@ -41,21 +41,21 @@ export default function HeroSection() {
           {/* Label */}
           <div className="animate-fade-up opacity-0 stagger-1">
             <span className="inline-block px-4 py-2 text-xs font-mono uppercase tracking-[0.2em] text-[#A3A3A3] border border-[#262626] bg-[#141414]/50 backdrop-blur-sm mb-8">
-              Desarrollador Full Stack & IoT
+              Desarrollador web · Tepeapulco Hidalgo
             </span>
           </div>
 
           {/* Title */}
           <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tighter mb-6 animate-fade-up opacity-0 stagger-2">
-            Transformo ideas en
+            Desarrollador web e IoT
             <br />
-            <span className="text-[#FF2A00]">soluciones digitales</span>
+            en <span className="text-[#FF2A00]">Tepeapulco Hidalgo</span>
           </h1>
 
           {/* Subtitle */}
           <p className="text-lg md:text-xl text-[#A3A3A3] max-w-2xl mx-auto mb-10 animate-fade-up opacity-0 stagger-3">
-            Especialista en Angular, React, C#, Java y Arduino. 
-            Creo aplicaciones web robustas y sistemas de domótica inteligentes.
+            Freelance full stack en el área Hidalgo: Angular, React, C#, Java y Arduino.
+            Aplicaciones web, sistemas empresariales y domótica inteligente.
           </p>
 
           {/* CTA Buttons */}
