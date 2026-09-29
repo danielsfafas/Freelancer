@@ -378,10 +378,10 @@ async def get_profile():
         return {
             "name": "Daniel Ortega",
             "title": "Desarrollador Full Stack & IoT",
-            "bio": "Especialista en desarrollo de software con más de 10 años de experiencia en tecnologías web, sistemas empresariales y domótica.",
+            "bio": "Especialista en desarrollo de software con más de 15 años de experiencia en tecnologías web, sistemas empresariales y domótica.",
             "email": "danielortegalozano@gmail.com",
-            "phone": "+1 (555) 123-4567",
-            "location": "Ciudad de México",
+            "phone": "+528112141456",
+            "location": "Tepeapulco, Hidalgo",
             "skills": ["Angular", "React", "C#", "Java", "Arduino", "SQL Server", "MongoDB"],
             "social": {
                 "github": "https://github.com/danielortega",

@@ -1,7 +1,12 @@
-import { Mail, Phone, MapPin, Github, Linkedin, Terminal } from 'lucide-react';
+import { Mail, Phone, MapPin, Github, Linkedin, Terminal, MessageCircle } from 'lucide-react';
+import { useBranding } from '../context/BrandingContext';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const { profile } = useBranding();
+  const phone = profile?.phone || '+528112141456';
+  const phoneDisplay = phone.replace(/^\+52/, '').replace(/(\d{2})(\d{4})(\d{4})/, '$1 $2 $3');
+  const whatsappMessage = encodeURIComponent('Hola Daniel, me interesa una cotización');
 
   return (
     <footer 
@@ -29,48 +34,48 @@ export default function Footer() {
                 href="https://github.com/danielortega"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 flex items-center justify-center border border-[#262626] hover:border-[#FF2A00] hover:text-[#FF2A00] transition-colors"
+                className="w-12 h-12 flex items-center justify-center border border-[#262626] hover:border-[#FF2A00] hover:text-[#FF2A00] transition-colors"
                 data-testid="footer-github"
                 aria-label="GitHub"
               >
-                <Github className="w-5 h-5" />
+                <Github className="w-6 h-6" />
               </a>
               <a
                 href="https://linkedin.com/in/danielortega"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 flex items-center justify-center border border-[#262626] hover:border-[#FF2A00] hover:text-[#FF2A00] transition-colors"
+                className="w-12 h-12 flex items-center justify-center border border-[#262626] hover:border-[#FF2A00] hover:text-[#FF2A00] transition-colors"
                 data-testid="footer-linkedin"
                 aria-label="LinkedIn"
               >
-                <Linkedin className="w-5 h-5" />
+                <Linkedin className="w-6 h-6" />
               </a>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-sm font-mono uppercase tracking-[0.2em] text-[#A3A3A3] mb-6">
+            <h2 className="text-sm font-mono uppercase tracking-[0.2em] text-[#A3A3A3] mb-6">
               Enlaces
-            </h4>
+            </h2>
             <ul className="space-y-3">
               <li>
-                <a href="/#services" className="text-[#A3A3A3] hover:text-[#FF2A00] transition-colors text-sm">
+                <a href="/#services" className="inline-block py-2 text-[#A3A3A3] hover:text-[#FF2A00] transition-colors text-base">
                   Servicios
                 </a>
               </li>
               <li>
-                <a href="/#portfolio" className="text-[#A3A3A3] hover:text-[#FF2A00] transition-colors text-sm">
+                <a href="/#portfolio" className="inline-block py-2 text-[#A3A3A3] hover:text-[#FF2A00] transition-colors text-base">
                   Portafolio
                 </a>
               </li>
               <li>
-                <a href="/#testimonials" className="text-[#A3A3A3] hover:text-[#FF2A00] transition-colors text-sm">
+                <a href="/#testimonials" className="inline-block py-2 text-[#A3A3A3] hover:text-[#FF2A00] transition-colors text-base">
                   Testimonios
                 </a>
               </li>
               <li>
-                <a href="/schedule" className="text-[#A3A3A3] hover:text-[#FF2A00] transition-colors text-sm">
+                <a href="/schedule" className="inline-block py-2 text-[#A3A3A3] hover:text-[#FF2A00] transition-colors text-base">
                   Agendar Cita
                 </a>
               </li>
@@ -79,23 +84,41 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-sm font-mono uppercase tracking-[0.2em] text-[#A3A3A3] mb-6">
+            <h2 className="text-sm font-mono uppercase tracking-[0.2em] text-[#A3A3A3] mb-6">
               Contacto
-            </h4>
+            </h2>
             <ul className="space-y-4">
               <li className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-[#FF2A00]" />
+                <Mail className="w-5 h-5 text-[#FF2A00]" />
                 <a 
                   href="mailto:danielortegalozano@gmail.com"
-                  className="text-[#A3A3A3] hover:text-white transition-colors text-sm"
+                  className="inline-block py-2 text-[#A3A3A3] hover:text-white transition-colors text-base"
                   data-testid="footer-email"
                 >
                   danielortegalozano@gmail.com
                 </a>
               </li>
               <li className="flex items-center gap-3">
-                <Phone className="w-4 h-4 text-[#FF2A00]" />
-                <span className="text-[#A3A3A3] text-sm">+1 (555) 123-4567</span>
+                <Phone className="w-5 h-5 text-[#FF2A00]" />
+                <a 
+                  href={`tel:${phone}`}
+                  className="inline-block py-2 text-[#A3A3A3] hover:text-white transition-colors text-base"
+                  data-testid="footer-phone"
+                >
+                  {phoneDisplay}
+                </a>
+              </li>
+              <li className="flex items-center gap-3">
+                <MessageCircle className="w-5 h-5 text-[#FF2A00]" />
+                <a 
+                  href={`https://wa.me/${phone.replace(/\D/g, '')}?text=${whatsappMessage}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block py-2 text-[#A3A3A3] hover:text-white transition-colors text-base"
+                  data-testid="footer-whatsapp"
+                >
+                  WhatsApp
+                </a>
               </li>
               <li className="flex items-center gap-3">
                 <MapPin className="w-4 h-4 text-[#FF2A00]" />
@@ -110,9 +133,14 @@ export default function Footer() {
           <p className="text-[#525252] text-sm">
             © {currentYear} Daniel Ortega. Todos los derechos reservados.
           </p>
-          <p className="text-[#525252] text-sm font-mono">
-            {'<'}/{'>'} Built with passion
-          </p>
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-center text-[#525252] text-sm">
+            <a href="/privacidad" className="hover:text-white transition-colors">
+              Aviso de privacidad
+            </a>
+            <p className="font-mono">
+              Hecho con pasión en Hidalgo
+            </p>
+          </div>
         </div>
       </div>
     </footer>

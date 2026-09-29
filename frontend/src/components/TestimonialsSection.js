@@ -84,10 +84,13 @@ export default function TestimonialsSection() {
                       src={avatar}
                       alt={testimonial.name}
                       className="w-full h-full object-cover"
+                      loading="lazy"
+                      width="48"
+                      height="48"
                     />
                   </div>
                   <div>
-                    <h4 className="font-bold text-white">{testimonial.name}</h4>
+                    <h3 className="font-bold text-white text-base">{testimonial.name}</h3>
                     <p className="text-sm text-[#A3A3A3]">
                       {testimonial.role} · {testimonial.company}
                     </p>

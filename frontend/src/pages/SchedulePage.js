@@ -10,6 +10,7 @@ import { Button } from '../components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { API_URL } from '../lib/apiBase';
@@ -35,7 +36,6 @@ export default function SchedulePage() {
     phone: '',
     service_type: '',
     preferred_time: '',
-    description: '',
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -296,13 +296,12 @@ export default function SchedulePage() {
 
                     <div>
                       <label className="text-xs font-mono uppercase tracking-widest text-[#525252] mb-2 block">
-                        Descripción del Proyecto *
+                        Descripción del Proyecto (opcional)
                       </label>
                       <Textarea
                         name="description"
-                        value={formData.description}
+                        value={formData.description || ''}
                         onChange={handleChange}
-                        required
                         placeholder="Cuéntame brevemente sobre tu proyecto o lo que deseas discutir..."
                         rows={4}
                         className="bg-[#0A0A0A] border-[#262626] text-white placeholder:text-[#525252] focus:border-[#FF2A00] focus:ring-[#FF2A00] rounded-none resize-none"
@@ -337,6 +336,7 @@ export default function SchedulePage() {
       </main>
 
       <Footer />
+      <FloatingWhatsApp />
     </div>
   );
 }

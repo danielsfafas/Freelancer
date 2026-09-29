@@ -1,7 +1,12 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import { ArrowRight, ChevronDown, MessageCircle } from 'lucide-react';
+import { useBranding } from '../context/BrandingContext';
 
 export default function HeroSection() {
+  const { profile } = useBranding();
+  const phone = profile?.phone || '+528112141456';
+  const whatsappMessage = encodeURIComponent('Hola Daniel, me interesa una cotización');
+  
   const scrollToServices = () => {
     document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -11,13 +16,26 @@ export default function HeroSection() {
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
       data-testid="hero-section"
     >
-      {/* Background Image */}
+      {/* Background Image - Optimized */}
       <div className="absolute inset-0">
-        <img
-          src="https://images.unsplash.com/photo-1762279389042-9439bfb6c155?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGRhcmslMjB0ZWNobm9sb2d5JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NzU1NzAyNDR8MA&ixlib=rb-4.1.0&q=85"
-          alt="Technology background"
-          className="w-full h-full object-cover"
-        />
+        <picture>
+          <source 
+            type="image/webp"
+            srcSet="https://images.unsplash.com/photo-1762279389042-9439bfb6c155?w=800&fm=webp&q=70&fit=crop 800w,
+                    https://images.unsplash.com/photo-1762279389042-9439bfb6c155?w=1200&fm=webp&q=70&fit=crop 1200w,
+                    https://images.unsplash.com/photo-1762279389042-9439bfb6c155?w=1600&fm=webp&q=70&fit=crop 1600w,
+                    https://images.unsplash.com/photo-1762279389042-9439bfb6c155?w=2000&fm=webp&q=70&fit=crop 2000w"
+            sizes="100vw"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1762279389042-9439bfb6c155?w=1600&fm=webp&q=70&fit=crop"
+            alt="Tecnología abstracta de fondo"
+            className="w-full h-full object-cover"
+            fetchpriority="high"
+            width="1600"
+            height="900"
+          />
+        </picture>
         <div className="absolute inset-0 bg-[#0A0A0A]/80"></div>
       </div>
 
@@ -45,41 +63,43 @@ export default function HeroSection() {
             </span>
           </div>
 
-          {/* Title */}
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tighter mb-6 animate-fade-up opacity-0 stagger-2">
-            Desarrollador web e IoT
+          {/* Title - No animation for LCP optimization */}
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tighter mb-6">
+            Sistemas y páginas web que te traen
             <br />
-            en <span className="text-[#FF2A00]">Tepeapulco Hidalgo</span>
+            <span className="text-[#FF2A00]">citas, pedidos y ventas</span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-lg md:text-xl text-[#A3A3A3] max-w-2xl mx-auto mb-10 animate-fade-up opacity-0 stagger-3">
-            Freelance full stack en el área Hidalgo: Angular, React, C#, Java y Arduino.
-            Aplicaciones web, sistemas empresariales y domótica inteligente.
+          <p className="text-lg md:text-xl text-[#A3A3A3] max-w-2xl mx-auto mb-10 animate-fade-up opacity-0 stagger-2">
+            Agenda en línea, pedidos por WhatsApp, punto de venta y tiendas en línea 
+            para negocios de Hidalgo. <span className="text-white font-medium">+15 años de experiencia.</span>
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up opacity-0 stagger-4">
-            <Link
-              to="/schedule"
-              className="group flex items-center gap-2 px-8 py-4 bg-[#FF2A00] hover:bg-[#CC2200] text-white font-medium transition-all"
-              data-testid="hero-cta-schedule"
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up opacity-0 stagger-3">
+            <a
+              href={`https://wa.me/${phone.replace(/\D/g, '')}?text=${whatsappMessage}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center gap-2 px-8 py-4 bg-[#25D366] hover:bg-[#20BD5A] text-white font-medium transition-all"
+              data-testid="hero-cta-whatsapp"
             >
-              Agendar Consultoría
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
+              <MessageCircle className="w-5 h-5" />
+              Cotiza por WhatsApp
+            </a>
             <a
               href="#portfolio"
               className="px-8 py-4 border border-[#262626] hover:border-[#FF2A00] text-white font-medium transition-colors"
               data-testid="hero-cta-portfolio"
             >
-              Ver Proyectos
+              Ver proyectos
             </a>
           </div>
 
-          {/* Tech Stack */}
-          <div className="mt-16 animate-fade-up opacity-0 stagger-5">
-            <p className="text-xs font-mono uppercase tracking-[0.2em] text-[#525252] mb-4">
+          {/* Tech Stack - Moved lower with proper spacing */}
+          <div className="mt-20 animate-fade-up opacity-0 stagger-4">
+            <p className="text-xs font-mono uppercase tracking-[0.2em] text-[#525252] mb-6">
               Stack Tecnológico
             </p>
             <div className="flex flex-wrap justify-center gap-3">
@@ -95,12 +115,12 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Scroll Indicator */}
+        {/* Scroll Indicator - Below tech stack */}
         <button
           onClick={scrollToServices}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[#525252] hover:text-[#FF2A00] transition-colors animate-fade-up opacity-0 stagger-6"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[#525252] hover:text-[#FF2A00] transition-colors animate-fade-up opacity-0 stagger-5"
           data-testid="hero-scroll-indicator"
-          aria-label="Scroll to services"
+          aria-label="Desplazarse a servicios"
         >
           <span className="text-xs font-mono uppercase tracking-widest">Explorar</span>
           <ChevronDown className="w-5 h-5 animate-bounce" />

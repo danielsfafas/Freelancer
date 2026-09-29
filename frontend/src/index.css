@@ -4,14 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Cabinet Grotesk - Using variable font fallback */
-@font-face {
-  font-family: 'Cabinet Grotesk';
-  src: url('https://assets.website-files.com/627028e9ed0e9b8e7c88e2ae/627c7fa0e2a2b02fa7e7cc11_CabinetGrotesk-Variable.woff2') format('woff2');
-  font-weight: 100 900;
-  font-display: swap;
-}
-
 :root {
   /* Dark Swiss Theme Colors */
   --bg-base: #0A0A0A;
@@ -66,7 +58,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Cabinet Grotesk', sans-serif;
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.1;
