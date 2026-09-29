@@ -1,40 +1,50 @@
 import "@/index.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Suspense, lazy } from "react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { BrandingProvider } from "./context/BrandingContext";
 import { Toaster } from "./components/ui/sonner";
 
-// Pages
+// Public Pages - Loaded immediately
 import HomePage from "./pages/HomePage";
 import SchedulePage from "./pages/SchedulePage";
-import AdminLoginPage from "./pages/AdminLoginPage";
-import AdminDashboard from "./pages/AdminDashboard";
-import AdminProjects from "./pages/AdminProjects";
-import AdminAppointments from "./pages/AdminAppointments";
-import AdminMessages from "./pages/AdminMessages";
-import AdminReviews from "./pages/AdminReviews";
-import AdminSettings from "./pages/AdminSettings";
+import NotFoundPage from "./pages/NotFoundPage";
+import PrivacyPage from "./pages/PrivacyPage";
 
-// Layout
-import AdminLayout from "./components/AdminLayout";
+// Admin Pages - Code-split for performance
+const AdminLoginPage = lazy(() => import("./pages/AdminLoginPage"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const AdminProjects = lazy(() => import("./pages/AdminProjects"));
+const AdminAppointments = lazy(() => import("./pages/AdminAppointments"));
+const AdminMessages = lazy(() => import("./pages/AdminMessages"));
+const AdminReviews = lazy(() => import("./pages/AdminReviews"));
+const AdminSettings = lazy(() => import("./pages/AdminSettings"));
+const AdminLayout = lazy(() => import("./components/AdminLayout"));
+
+// Loading spinner component
+const LoadingSpinner = () => (
+  <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
+    <div className="w-8 h-8 border-2 border-[#FF2A00] border-t-transparent rounded-full animate-spin"></div>
+  </div>
+);
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-[#FF2A00] border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!user) {
     return <Navigate to="/admin" replace />;
   }
 
-  return <AdminLayout>{children}</AdminLayout>;
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <AdminLayout>{children}</AdminLayout>
+    </Suspense>
+  );
 }
 
 function AppRoutes() {
@@ -45,19 +55,20 @@ function AppRoutes() {
       {/* Public Routes */}
       <Route path="/" element={<HomePage />} />
       <Route path="/schedule" element={<SchedulePage />} />
+      <Route path="/privacidad" element={<PrivacyPage />} />
       
       {/* Admin Login */}
       <Route 
         path="/admin" 
         element={
           loading ? (
-            <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
-              <div className="w-8 h-8 border-2 border-[#FF2A00] border-t-transparent rounded-full animate-spin"></div>
-            </div>
+            <LoadingSpinner />
           ) : user ? (
             <Navigate to="/admin/dashboard" replace />
           ) : (
-            <AdminLoginPage />
+            <Suspense fallback={<LoadingSpinner />}>
+              <AdminLoginPage />
+            </Suspense>
           )
         } 
       />
@@ -112,8 +123,8 @@ function AppRoutes() {
         }
       />
 
-      {/* Catch all - redirect to home */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      {/* Catch all - 404 page */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

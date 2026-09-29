@@ -103,13 +103,6 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              to="/admin"
-              className="px-4 py-2 text-sm font-medium border border-[#262626] hover:border-[#FF2A00] hover:text-[#FF2A00] transition-colors"
-              data-testid="nav-link-admin"
-            >
-              <Code2 className="w-4 h-4" />
-            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -142,13 +135,6 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                to="/admin"
-                onClick={() => setIsMenuOpen(false)}
-                className="text-base font-medium text-[#A3A3A3] hover:text-[#FF2A00] transition-colors"
-              >
-                Admin
-              </Link>
             </div>
           </div>
         )}

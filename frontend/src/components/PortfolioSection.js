@@ -51,12 +51,17 @@ export default function PortfolioSection() {
           <div className="max-w-2xl">
             <span className="label-uppercase mb-4 block">Portafolio</span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tighter">
-              Proyectos <span className="text-[#FF2A00]">destacados</span>
+              Casos de <span className="text-[#FF2A00]">éxito</span>
             </h2>
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {categories.map((cat) => (
+            {categories.filter(cat => {
+              if (cat.id === 'iot') {
+                return projects.some(p => p.category === 'iot');
+              }
+              return true;
+            }).map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveFilter(cat.id)}
@@ -64,6 +69,7 @@ export default function PortfolioSection() {
                   activeFilter === cat.id ? 'active border-[#FF2A00] text-white' : ''
                 }`}
                 data-testid={`portfolio-filter-${cat.id}`}
+                style={{ minHeight: '44px', minWidth: '44px', padding: '0.5rem 1rem' }}
               >
                 {cat.label}
               </button>
@@ -111,6 +117,9 @@ export default function PortfolioSection() {
                           src={imageSrc}
                           alt={project.title}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          loading="lazy"
+                          width="419"
+                          height="236"
                         />
                         <div className="absolute inset-0 bg-[#0A0A0A]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
                           {embed ? (

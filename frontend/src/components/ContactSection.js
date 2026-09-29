@@ -1,13 +1,19 @@
 import { useState } from 'react';
-import { Send, Mail, Phone, MapPin } from 'lucide-react';
+import { Send, Mail, Phone, MapPin, MessageCircle } from 'lucide-react';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Button } from '../components/ui/button';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { API_URL } from '../lib/apiBase';
+import { useBranding } from '../context/BrandingContext';
 
 export default function ContactSection() {
+  const { profile } = useBranding();
+  const phone = profile?.phone || '+528112141456';
+  const phoneDisplay = phone.replace(/^\+52/, '').replace(/(\d{2})(\d{4})(\d{4})/, '$1 $2 $3');
+  const whatsappMessage = encodeURIComponent('Hola Daniel, me interesa una cotización');
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -65,7 +71,7 @@ export default function ContactSection() {
                   <p className="text-xs font-mono uppercase tracking-widest text-[#525252] mb-1">Email</p>
                   <a 
                     href="mailto:danielortegalozano@gmail.com"
-                    className="text-white hover:text-[#FF2A00] transition-colors"
+                    className="inline-block py-2 text-white hover:text-[#FF2A00] transition-colors text-base"
                     data-testid="contact-email"
                   >
                     danielortegalozano@gmail.com
@@ -79,7 +85,31 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <p className="text-xs font-mono uppercase tracking-widest text-[#525252] mb-1">Teléfono</p>
-                  <span className="text-white">+1 (555) 123-4567</span>
+                  <a 
+                    href={`tel:${phone}`}
+                    className="text-white hover:text-[#FF2A00] transition-colors"
+                    data-testid="contact-phone"
+                  >
+                    {phoneDisplay}
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 flex items-center justify-center border border-[#262626]">
+                  <MessageCircle className="w-5 h-5 text-[#FF2A00]" />
+                </div>
+                <div>
+                  <p className="text-xs font-mono uppercase tracking-widest text-[#525252] mb-1">WhatsApp</p>
+                  <a 
+                    href={`https://wa.me/${phone.replace(/\D/g, '')}?text=${whatsappMessage}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-[#FF2A00] transition-colors"
+                    data-testid="contact-whatsapp"
+                  >
+                    Enviar mensaje
+                  </a>
                 </div>
               </div>
 
