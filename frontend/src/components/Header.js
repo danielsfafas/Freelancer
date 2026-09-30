@@ -35,6 +35,7 @@ export default function Header() {
 
   const navLinks = [
     { href: '/#services', label: 'Servicios' },
+    { href: '/#productos', label: 'Productos' },
     { href: '/#portfolio', label: 'Portafolio' },
     { href: '/#pricing', label: 'Precios' },
     hasTestimonials

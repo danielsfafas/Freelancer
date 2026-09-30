@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Github, Play, Youtube } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Github, Play, Youtube } from 'lucide-react';
+import { getProduct } from '../data/products';
 import axios from 'axios';
 import {
   resolveProjectMediaUrl,
@@ -8,6 +10,19 @@ import {
 } from '../lib/projectMedia';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL || '';
+
+// Casos del portafolio que corresponden a un producto de DanySolutions.
+const PROJECT_PRODUCT = {
+  'proj-ambar': 'comandix',
+  'proj-moralesbox': 'miembroscheck',
+  'proj-podologia': 'podologia',
+  '0de5e656-0154-43f2-8ebd-f5b2b987d5cb': 'ventacheck',
+};
+
+const productForProject = (project) => {
+  const slug = PROJECT_PRODUCT[project.id] || (/outlet/i.test(project.title || '') ? 'ventacheck' : null);
+  return slug ? getProduct(slug) : null;
+};
 
 const categories = [
   { id: 'all', label: 'Todos' },
@@ -94,6 +109,7 @@ export default function PortfolioSection() {
                 youtubeThumbUrl(project.video_url) ||
                 'https://images.unsplash.com/photo-1720135885007-454165745e21';
               const showingVideo = activeVideoId === project.id && embed;
+              const product = productForProject(project);
 
               return (
                 <article
@@ -182,6 +198,17 @@ export default function PortfolioSection() {
                         </span>
                       )}
                     </div>
+
+                    {product && (
+                      <Link
+                        to={`/productos/${product.slug}`}
+                        className="mt-4 inline-flex items-center gap-2 min-h-[44px] text-sm font-medium text-white hover:text-[#FF2A00] transition-colors"
+                        data-testid={`portfolio-product-link-${product.slug}`}
+                      >
+                        Producto: {product.name}
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    )}
                   </div>
                 </article>
               );

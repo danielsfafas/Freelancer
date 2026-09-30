@@ -65,6 +65,11 @@ export default function Footer() {
                 </a>
               </li>
               <li>
+                <a href="/#productos" className="inline-block py-2 text-[#A3A3A3] hover:text-[#FF2A00] transition-colors text-base">
+                  Productos
+                </a>
+              </li>
+              <li>
                 <a href="/#portfolio" className="inline-block py-2 text-[#A3A3A3] hover:text-[#FF2A00] transition-colors text-base">
                   Portafolio
                 </a>
