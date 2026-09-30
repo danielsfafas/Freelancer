@@ -4,6 +4,7 @@ import HeroSection from '../components/HeroSection';
 import ServicesSection from '../components/ServicesSection';
 import PortfolioSection from '../components/PortfolioSection';
 import TestimonialsSection from '../components/TestimonialsSection';
+import PricingSection from '../components/PricingSection';
 import ContactSection from '../components/ContactSection';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 
@@ -15,6 +16,7 @@ export default function HomePage() {
         <HeroSection />
         <ServicesSection />
         <PortfolioSection />
+        <PricingSection />
         <TestimonialsSection />
         <ContactSection />
       </main>
