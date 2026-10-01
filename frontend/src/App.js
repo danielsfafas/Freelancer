@@ -10,6 +10,7 @@ import HomePage from "./pages/HomePage";
 import SchedulePage from "./pages/SchedulePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import PrivacyPage from "./pages/PrivacyPage";
+import ProductPage from "./pages/ProductPage";
 
 // Admin Pages - Code-split for performance
 const AdminLoginPage = lazy(() => import("./pages/AdminLoginPage"));
@@ -56,6 +57,7 @@ function AppRoutes() {
       <Route path="/" element={<HomePage />} />
       <Route path="/schedule" element={<SchedulePage />} />
       <Route path="/privacidad" element={<PrivacyPage />} />
+      <Route path="/productos/:slug" element={<ProductPage />} />
       
       {/* Admin Login */}
       <Route 
