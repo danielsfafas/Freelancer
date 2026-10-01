@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check, Gift } from 'lucide-react';
 import { PRODUCTS } from '../data/products';
 import ProductVideo, { PRODUCT_ICONS } from './ProductVideo';
 
@@ -50,6 +50,16 @@ export default function ProductsSection() {
                     </h3>
                   </div>
                   <p className="text-[#A3A3A3] mb-5">{product.tagline}</p>
+
+                  {product.trial && (
+                    <p
+                      className="inline-flex items-center gap-2 self-start mb-5 px-3 py-1.5 border border-[#FF2A00] text-[#FF2A00] text-xs font-mono uppercase tracking-widest"
+                      data-testid={`product-trial-${product.slug}`}
+                    >
+                      <Gift className="w-3.5 h-3.5 shrink-0" />
+                      {product.trial}
+                    </p>
+                  )}
 
                   <ul className="space-y-2 mb-6 text-sm">
                     {product.highlights.map((h) => (

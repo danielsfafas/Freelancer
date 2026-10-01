@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, ExternalLink, MessageCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ExternalLink, Gift, MessageCircle } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
@@ -80,6 +80,16 @@ export default function ProductPage() {
                   {product.name}
                 </h1>
                 <p className="text-xl sm:text-2xl text-white mb-6 max-w-2xl">{product.tagline}</p>
+
+                {product.trial && (
+                  <p
+                    className="inline-flex items-center gap-2 mb-6 px-3 py-1.5 border border-[#FF2A00] text-[#FF2A00] text-xs font-mono uppercase tracking-widest"
+                    data-testid="product-trial"
+                  >
+                    <Gift className="w-3.5 h-3.5 shrink-0" />
+                    {product.trial}
+                  </p>
+                )}
 
                 <div className="border-l-2 border-[#FF2A00] pl-4 mb-10 max-w-2xl">
                   <p className="text-xs font-mono uppercase tracking-widest text-[#525252] mb-1">
@@ -175,6 +185,7 @@ export default function ProductPage() {
                   ¿Quieres ver {product.name} en tu negocio?
                 </h2>
                 <p className="text-[#A3A3A3]">
+                  {product.trial && <>Incluye {product.trial}. </>}
                   Desde $800 MXN al mes en el plan de 12 meses, más $1,000 de inscripción.
                   Precios en MXN, sin IVA.
                 </p>

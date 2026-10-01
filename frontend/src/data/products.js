@@ -85,7 +85,7 @@ export const PRODUCTS = [
         features: [
           { title: 'Dashboard', text: 'Alumnos activos, ingresos del mes, vencidos, renovaciones y asistencias de la semana.' },
           { title: 'Sitio web editable', text: 'Tu página con paquetes, productos, eventos y contacto, con cinco temas de diseño.' },
-          { title: 'Varias sucursales', text: 'Cada sucursal con su propio administrador.' },
+          { title: 'Hasta 3 sucursales', text: 'El precio incluye hasta 3 sucursales, cada una con su propio administrador.' },
         ],
       },
     ],
@@ -99,6 +99,7 @@ export const PRODUCTS = [
     highlights: ['Calendario automático', 'Cobros por jornada y caja del día', 'Marcador en vivo y página pública'],
     video: `${VIDEO_BASE}/ligafutbol.mp4`,
     poster: `${VIDEO_BASE}/ligafutbol-poster.jpg`,
+    trial: '14 días de prueba gratis',
     reference: { label: 'futbol.danysolutions.online', url: 'https://futbol.danysolutions.online/' },
     groups: [
       {
@@ -182,8 +183,8 @@ export const PRODUCTS = [
     audience:
       'Tiendas, boutiques, ferreterías y comercios que venden en mostrador y en línea, con una o varias sucursales.',
     highlights: ['Tienda en línea con CFDI', 'Caja con código de barras', 'Inventario por sucursal'],
-    video: null,
-    poster: null,
+    video: `${VIDEO_BASE}/ventacheck.mp4`,
+    poster: `${VIDEO_BASE}/ventacheck-poster.jpg`,
     reference: { label: 'Outlet Premium Sahagún', url: 'https://outletpremiumsahagun.danysolutions.online/' },
     groups: [
       {

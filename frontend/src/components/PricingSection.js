@@ -173,6 +173,9 @@ export default function PricingSection() {
         <p className="mt-4 text-sm font-mono text-[#A3A3A3]" data-testid="pricing-tax-note">
           * Precios en MXN, sin IVA.
         </p>
+        <p className="mt-2 text-sm font-mono text-[#A3A3A3]" data-testid="pricing-trial-note">
+          * Solo LigaFutbol incluye 14 días de prueba gratis.
+        </p>
 
         {/* Inscripción + CTA general */}
         <div className="mt-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6 border border-[#262626] bg-[#0A0A0A] p-6 lg:p-8">
