@@ -9,6 +9,10 @@ set -euo pipefail
 
 DOMAIN="${1:-www.danysolutions.online}"
 EMAIL="${2:-danielortegalozano@gmail.com}"
+# Dominio raíz (apex): www.danysolutions.online -> danysolutions.online.
+# Comparte el certificado de www y solo redirige a https://www.
+APEX="${3:-${DOMAIN#www.}}"
+BACKUP_DIR="/root/backups/nginx-freelancer"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WEBROOT="/var/www/certbot"
 CONF_DEST="/etc/nginx/conf.d/freelancer-https.conf"
@@ -30,7 +34,22 @@ fi
 systemctl enable nginx >/dev/null 2>&1 || true
 systemctl start nginx >/dev/null 2>&1 || true
 
-mkdir -p "$WEBROOT" /etc/nginx/conf.d
+mkdir -p "$WEBROOT" /etc/nginx/conf.d "$BACKUP_DIR"
+
+# Respaldo de la configuración actual antes de cambiarla
+STAMP="$(date +%Y%m%d-%H%M%S)"
+if [[ -f "$CONF_DEST" ]]; then
+  cp -a "$CONF_DEST" "${BACKUP_DIR}/freelancer-https.conf.${STAMP}"
+  echo ">> Respaldo: ${BACKUP_DIR}/freelancer-https.conf.${STAMP}"
+fi
+if [[ -f "/etc/letsencrypt/renewal/${DOMAIN}.conf" ]]; then
+  cp -a "/etc/letsencrypt/renewal/${DOMAIN}.conf" "${BACKUP_DIR}/renewal-${DOMAIN}.conf.${STAMP}"
+fi
+
+cert_has_apex() {
+  local crt="/etc/letsencrypt/live/${DOMAIN}/cert.pem"
+  [[ -f "$crt" ]] && openssl x509 -in "$crt" -noout -text | grep -q "DNS:${APEX}\(,\|$\)"
+}
 
 # 2) Fase bootstrap HTTP para reto ACME (si aun no hay certificado)
 if [[ ! -f "/etc/letsencrypt/live/${DOMAIN}/fullchain.pem" ]]; then
@@ -40,17 +59,42 @@ if [[ ! -f "/etc/letsencrypt/live/${DOMAIN}/fullchain.pem" ]]; then
 
   certbot certonly --webroot \
     -w "$WEBROOT" \
+    --cert-name "$DOMAIN" \
     -d "$DOMAIN" \
+    -d "$APEX" \
     --email "$EMAIL" \
     --agree-tos \
     --non-interactive \
     --no-eff-email
 fi
 
-# 3) Fase final HTTPS con rutas Let's Encrypt
+# 3) Fase final HTTPS con rutas Let's Encrypt (www + bloques apex)
 cp "${SCRIPT_DIR}/nginx-host-freelancer.conf" "$CONF_DEST"
-nginx -t
+if ! nginx -t; then
+  echo "!! nginx -t falló; restaurando respaldo" >&2
+  [[ -f "${BACKUP_DIR}/freelancer-https.conf.${STAMP}" ]] && cp -a "${BACKUP_DIR}/freelancer-https.conf.${STAMP}" "$CONF_DEST"
+  nginx -t && systemctl reload nginx
+  exit 1
+fi
 systemctl reload nginx
 
-echo "OK: certificado Let's Encrypt activo para ${DOMAIN}"
+# 4) Expandir el certificado para incluir el apex si aún no lo cubre.
+#    El bloque :80 del apex ya sirve /.well-known/acme-challenge/ desde $WEBROOT.
+if ! cert_has_apex; then
+  echo ">> Expandiendo certificado ${DOMAIN} para incluir ${APEX} ..."
+  certbot certonly --webroot \
+    -w "$WEBROOT" \
+    --cert-name "$DOMAIN" \
+    --expand \
+    -d "$DOMAIN" \
+    -d "$APEX" \
+    --email "$EMAIL" \
+    --agree-tos \
+    --non-interactive \
+    --no-eff-email
+  nginx -t
+  systemctl reload nginx
+fi
+
+echo "OK: certificado Let's Encrypt activo para ${DOMAIN} y ${APEX} (apex redirige a https://${DOMAIN})"
 echo "Comprueba: curl -sI https://${DOMAIN}/ | head -5"

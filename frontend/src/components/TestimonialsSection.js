@@ -51,8 +51,8 @@ export default function TestimonialsSection() {
             return (
               <article
                 key={testimonial.id}
-                className="group p-8 lg:p-10 bg-[#141414] border border-[#262626] card-hover animate-fade-up opacity-0"
-                style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'forwards' }}
+                className="group p-8 lg:p-10 bg-[#141414] border border-[#262626] card-hover reveal"
+                style={{ '--reveal-delay': `${(index % 2) * 0.08}s` }}
                 data-testid={`testimonial-card-${index}`}
               >
                 {/* Quote Icon */}

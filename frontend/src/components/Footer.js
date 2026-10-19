@@ -1,5 +1,7 @@
-import { Mail, Phone, MapPin, Github, Linkedin, Terminal, MessageCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Mail, Phone, MapPin, Github, Linkedin, MessageCircle } from 'lucide-react';
 import { useBranding } from '../context/BrandingContext';
+import BrandLogo from './BrandLogo';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -13,20 +15,15 @@ export default function Footer() {
       className="bg-[#0A0A0A] border-t border-[#262626]"
       data-testid="main-footer"
     >
-      <div className="container-custom py-16">
+      <div className="container-custom pt-16 pb-28 md:pb-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 flex items-center justify-center border border-[#262626] bg-[#141414]">
-                <Terminal className="w-5 h-5 text-[#FF2A00]" />
-              </div>
-              <span className="font-bold text-lg tracking-tight">
-                Daniel<span className="text-[#FF2A00]">.</span>Ortega
-              </span>
+            <div className="mb-4">
+              <BrandLogo />
             </div>
             <p className="text-[#A3A3A3] text-sm leading-relaxed mb-6">
-              Desarrollador web e IoT en Tepeapulco Hidalgo. Soluciones full stack
+              Daniel Ortega, desarrollador web e IoT en Tepeapulco, Hidalgo. Soluciones full stack
               robustas y escalables para empresas del área Hidalgo y todo México.
             </p>
             <div className="flex gap-4">
@@ -141,12 +138,15 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-[#262626] flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-[#525252] text-sm">
-            © {currentYear} Daniel Ortega. Todos los derechos reservados.
+            © {currentYear} DanySolutions · Daniel Ortega. Todos los derechos reservados.
           </p>
           <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-center text-[#525252] text-sm">
-            <a href="/privacidad" className="hover:text-white transition-colors">
+            <Link to="/privacidad" className="hover:text-white transition-colors" data-testid="footer-privacy">
               Aviso de privacidad
-            </a>
+            </Link>
+            <Link to="/terminos" className="hover:text-white transition-colors" data-testid="footer-terms">
+              Términos y condiciones
+            </Link>
             <p className="font-mono">
               Hecho con pasión en Hidalgo
             </p>
