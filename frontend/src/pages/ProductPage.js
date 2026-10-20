@@ -34,17 +34,15 @@ export default function ProductPage() {
     if (!product) return undefined;
     // BrandingProvider fija el título al cargar el perfil; lo aplicamos después.
     const timer = setTimeout(() => {
-      document.title = `${product.name}: funcionalidades | Dany Solutions`;
+      document.title = `${product.name}: funcionalidades | DanySolutions`;
     }, 0);
     const previousDescription = setMetaDescription(`${product.name}: ${product.tagline}`);
     return () => {
       clearTimeout(timer);
-      document.title = profile?.name?.trim()
-        ? `${profile.name.trim()} | Desarrollador web Tepeapulco Hidalgo`
-        : DEFAULT_PAGE_TITLE;
+      document.title = DEFAULT_PAGE_TITLE;
       if (previousDescription) setMetaDescription(previousDescription);
     };
-  }, [product, profile]);
+  }, [product]);
 
   if (!product) return <NotFoundPage />;
 

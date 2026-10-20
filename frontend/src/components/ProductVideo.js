@@ -1,4 +1,5 @@
-import { ShoppingBag, Dumbbell, Footprints, Trophy, UtensilsCrossed } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Play, ShoppingBag, Dumbbell, Footprints, Trophy, UtensilsCrossed } from 'lucide-react';
 
 export const PRODUCT_ICONS = {
   comandix: UtensilsCrossed,
@@ -34,18 +35,86 @@ export default function ProductVideo({ product, className = '' }) {
     );
   }
 
+  return <PosterVideo product={product} className={className} />;
+}
+
+/**
+ * Muestra la portada (poster) con un botón de reproducir. El <video> solo se
+ * monta al pulsar play, y el indicador de carga aparece únicamente mientras el
+ * video realmente está cargando/esperando datos después de pulsar play.
+ */
+function PosterVideo({ product, className }) {
+  const [started, setStarted] = useState(false);
+  const [buffering, setBuffering] = useState(false);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (!started || !videoRef.current) return;
+    const p = videoRef.current.play();
+    if (p && typeof p.catch === 'function') p.catch(() => setBuffering(false));
+  }, [started]);
+
+  const frame = `relative aspect-[9/16] w-full bg-[#0A0A0A] border border-[#262626] overflow-hidden ${className}`;
+
+  if (!started) {
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          setBuffering(true);
+          setStarted(true);
+        }}
+        className={`${frame} group block`}
+        aria-label={`Reproducir video promocional de ${product.name}`}
+        data-testid={`product-video-${product.slug}`}
+      >
+        <img
+          src={product.poster}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
+          width="320"
+          height="569"
+        />
+        <span className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
+          <span className="w-16 h-16 flex items-center justify-center rounded-full bg-[#FF2A00] group-hover:bg-[#CC2200] shadow-lg transition-colors">
+            <Play className="w-7 h-7 text-white translate-x-0.5" fill="currentColor" />
+          </span>
+        </span>
+      </button>
+    );
+  }
+
   return (
-    <video
-      className={`aspect-[9/16] w-full bg-[#0A0A0A] border border-[#262626] object-cover ${className}`}
-      controls
-      preload="none"
-      playsInline
-      poster={product.poster}
-      aria-label={`Video promocional de ${product.name}`}
-      data-testid={`product-video-${product.slug}`}
-    >
-      <source src={product.video} type="video/mp4" />
-      Tu navegador no puede reproducir este video.
-    </video>
+    <div className={frame}>
+      <video
+        ref={videoRef}
+        className="absolute inset-0 w-full h-full object-cover"
+        controls
+        playsInline
+        preload="auto"
+        poster={product.poster}
+        aria-label={`Video promocional de ${product.name}`}
+        data-testid={`product-video-player-${product.slug}`}
+        onWaiting={() => setBuffering(true)}
+        onLoadStart={() => setBuffering(true)}
+        onPlaying={() => setBuffering(false)}
+        onCanPlay={() => setBuffering(false)}
+        onPause={() => setBuffering(false)}
+        onError={() => setBuffering(false)}
+      >
+        <source src={product.video} type="video/mp4" />
+        Tu navegador no puede reproducir este video.
+      </video>
+      {buffering && (
+        <span
+          className="pointer-events-none absolute inset-0 flex items-center justify-center"
+          role="status"
+          aria-label="Cargando video"
+        >
+          <span className="w-10 h-10 border-2 border-[#FF2A00] border-t-transparent rounded-full animate-spin" />
+        </span>
+      )}
+    </div>
   );
 }

@@ -114,8 +114,8 @@ export default function PortfolioSection() {
               return (
                 <article
                   key={project.id}
-                  className="group bg-[#0A0A0A] border border-[#262626] overflow-hidden card-hover animate-fade-up opacity-0"
-                  style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'forwards' }}
+                  className="group bg-[#0A0A0A] border border-[#262626] overflow-hidden card-hover reveal"
+                  style={{ '--reveal-delay': `${(index % 3) * 0.08}s` }}
                   data-testid={`portfolio-project-${index}`}
                 >
                   <div className="relative aspect-video overflow-hidden bg-[#111]">

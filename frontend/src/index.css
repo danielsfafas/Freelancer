@@ -71,6 +71,19 @@ code, pre {
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+  /* El header fijo mide 4rem (móvil) / 5rem (md+): deja margen al saltar a #anclas */
+  scroll-padding-top: 4.75rem;
+}
+
+@media (min-width: 768px) {
+  html {
+    scroll-padding-top: 5.75rem;
+  }
+}
+
+/* Titulares con líneas equilibradas (evita palabras sueltas) */
+.text-balance {
+  text-wrap: balance;
 }
 
 /* Custom Scrollbar */
@@ -137,7 +150,24 @@ html {
 }
 
 .animate-fade-up {
-  animation: fadeUp 0.6s ease-out forwards;
+  /* 'both' aplica el estado inicial durante el delay sin depender de opacity-0 */
+  animation: fadeUp 0.6s ease-out both;
+}
+
+/*
+ * Revelado progresivo al hacer scroll.
+ * Sin JS, sin IntersectionObserver o con prefers-reduced-motion el contenido
+ * se ve siempre. src/lib/reveal.js agrega .reveal-ready a <html> solo cuando
+ * puede observar los elementos, y .is-visible a cada uno al entrar en pantalla.
+ */
+.reveal-ready .reveal {
+  transition: opacity 0.45s ease-out, transform 0.45s ease-out;
+  transition-delay: var(--reveal-delay, 0s);
+}
+
+.reveal-ready .reveal:not(.is-visible) {
+  opacity: 0;
+  transform: translateY(16px);
 }
 
 .animate-slide-in-right {
@@ -317,10 +347,22 @@ html {
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal-ready .reveal,
+  .reveal-ready .reveal:not(.is-visible) {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }

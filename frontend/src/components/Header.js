@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Code2, Terminal } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import axios from 'axios';
-import { useBranding, resolveMediaUrl } from '../context/BrandingContext';
+import BrandLogo from './BrandLogo';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL || '';
 
@@ -10,12 +10,6 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hasTestimonials, setHasTestimonials] = useState(true);
   const location = useLocation();
-  const { profile, logoUrl } = useBranding();
-  const brandName = profile?.name?.trim() || 'Daniel.Ortega';
-  const [firstName, ...restName] = brandName.replace(/\./g, ' ').split(/\s+/).filter(Boolean);
-  const displayFirst = firstName || 'Daniel';
-  const displayRest = restName.length ? restName.join(' ') : 'Ortega';
-  const resolvedLogo = logoUrl ? resolveMediaUrl(logoUrl) : '';
 
   useEffect(() => {
     let cancelled = false;
@@ -77,17 +71,9 @@ export default function Header() {
             to="/" 
             className="flex items-center gap-2 group"
             data-testid="header-logo"
+            aria-label="DanySolutions, ir al inicio"
           >
-            <div className="w-10 h-10 flex items-center justify-center border border-[#262626] bg-[#141414] group-hover:border-[#FF2A00] transition-colors overflow-hidden">
-              {resolvedLogo ? (
-                <img src={resolvedLogo} alt={brandName} className="w-full h-full object-contain p-1" />
-              ) : (
-                <Terminal className="w-5 h-5 text-[#FF2A00]" />
-              )}
-            </div>
-            <span className="font-bold text-lg tracking-tight hidden sm:block">
-              {displayFirst}<span className="text-[#FF2A00]">.</span>{displayRest}
-            </span>
+            <BrandLogo />
           </Link>
 
           {/* Desktop Navigation */}

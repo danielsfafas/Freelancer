@@ -66,8 +66,8 @@ export default function ServicesSection() {
             return (
               <div
                 key={service.id}
-                className="group p-8 lg:p-12 grid-border card-hover animate-fade-up opacity-0"
-                style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'forwards' }}
+                className="group p-8 lg:p-12 grid-border card-hover reveal"
+                style={{ '--reveal-delay': `${Math.min(index, 5) * 0.08}s` }}
                 data-testid={`service-card-${index}`}
               >
                 <div className="w-12 h-12 flex items-center justify-center border border-[#262626] group-hover:border-[#FF2A00] transition-colors mb-6">

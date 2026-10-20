@@ -542,8 +542,8 @@ async def startup_event():
             },
             {
                 "id": "proj-pancitapio",
-                "title": "Pancita Pio",
-                "description": "Sistema de restaurante para taquería de carnitas: menú, comandas, caja, cocina e pedidos por WhatsApp con IA.",
+                "title": "Pancita Los Netos",
+                "description": "Sistema de restaurante para taquería de carnitas: menú, comandas, caja, cocina y pedidos por WhatsApp con IA.",
                 "technologies": ["React", "Node.js", "PostgreSQL", "WhatsApp", "IA"],
                 "category": "web",
                 "image_url": "/portfolio-logos/pancitapio.png",
@@ -573,6 +573,64 @@ async def startup_event():
         await db.projects.insert_one({**project, "created_at": now, "updated_at": now})
         inserted += 1
     logger.info("Portfolio seed: %s nuevos, %s ya existían (sin modificar)", inserted, len(portfolio_seed) - inserted)
+
+    await apply_content_fixes()
+
+
+# Correcciones de ortografía en contenido editable desde el admin (revisión oct-2026).
+# Cada corrección solo se aplica si el campo conserva EXACTAMENTE el texto anterior,
+# así nunca pisa una edición posterior hecha desde el panel. Antes de modificar se
+# guarda una copia del documento original en la colección content_fixes_backup.
+CONTENT_FIXES = [
+    ("projects", "proj-pancitapio", "description",
+     "Sistema de restaurante para taquería de carnitas: menú, comandas, caja, cocina e pedidos por WhatsApp con IA.",
+     "Sistema de restaurante para taquería de carnitas: menú, comandas, caja, cocina y pedidos por WhatsApp con IA."),
+    ("projects", "5a9bac30-1828-4ec0-88ef-32a96992ce19", "description",
+     "Reservación para diferentes servicios via WhatsApp + Modulo Facturación Electronica ",
+     "Reservación para diferentes servicios vía WhatsApp + Módulo de Facturación Electrónica."),
+    ("projects", "0de5e656-0154-43f2-8ebd-f5b2b987d5cb", "title",
+     "Outlet Permium Sahagun",
+     "Outlet Premium Sahagún"),
+    ("projects", "0de5e656-0154-43f2-8ebd-f5b2b987d5cb", "description",
+     "* Tienda en linea, Modulo de envios de paqueteria integrado con T1Envios.\n* Punto de venta.\n* Manejo de sucursales.\n* Pagos con tarjeta.\n",
+     "* Tienda en línea, módulo de envíos de paquetería integrado con T1 Envíos.\n* Punto de venta.\n* Manejo de sucursales.\n* Pagos con tarjeta.\n"),
+    ("projects", "6a2c20cf-9b9d-4200-b83a-df54f16427e9", "description",
+     "Pagina web para publicidad de sus productos.",
+     "Página web para publicidad de sus productos."),
+    # Nombre del negocio confirmado por el usuario: "Pancita Los Netos".
+    ("projects", "proj-pancitapio", "title",
+     "Pancita Pio",
+     "Pancita Los Netos"),
+    ("testimonials", "206f596d-1d50-4de0-b1c5-ba17f2284f4f", "company",
+     "Pancita los NETOS",
+     "Pancita Los Netos"),
+    ("testimonials", "46e81c8f-ea3d-4649-9e02-5faa39f03b3d", "content",
+     "Daniel desarrolló nuestro sistema de gestión Citas. Su conocimiento técnico y profesionalismo superaron nuestras expectativas, El sistema nos ha ayudado para mejorar la atención a nuestros clientes llevando su historial clinico, haciendo la atención mas personalizada.",
+     "Daniel desarrolló nuestro sistema de gestión de citas. Su conocimiento técnico y profesionalismo superaron nuestras expectativas. El sistema nos ha ayudado a mejorar la atención a nuestros clientes llevando su historial clínico, haciendo la atención más personalizada."),
+]
+
+
+async def apply_content_fixes():
+    applied = 0
+    for collection, doc_id, field, old, new in CONTENT_FIXES:
+        coll = db[collection]
+        original = await coll.find_one({"id": doc_id, field: old})
+        if not original:
+            continue
+        backup = {k: v for k, v in original.items() if k != "_id"}
+        await db.content_fixes_backup.insert_one({
+            "collection": collection,
+            "doc_id": doc_id,
+            "field": field,
+            "backed_up_at": datetime.now(timezone.utc).isoformat(),
+            "document": backup,
+        })
+        result = await coll.update_one(
+            {"id": doc_id, field: old},
+            {"$set": {field: new, "updated_at": datetime.now(timezone.utc).isoformat()}},
+        )
+        applied += result.modified_count
+    logger.info("Correcciones de contenido aplicadas: %s", applied)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():

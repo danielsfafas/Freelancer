@@ -13,7 +13,7 @@ export default function HeroSection() {
 
   return (
     <section 
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-28 sm:pb-32"
       data-testid="hero-section"
     >
       {/* Background Image - Optimized */}
@@ -57,7 +57,7 @@ export default function HeroSection() {
       <div className="relative z-10 container-custom text-center">
         <div className="max-w-4xl mx-auto">
           {/* Label */}
-          <div className="animate-fade-up opacity-0 stagger-1">
+          <div className="animate-fade-up stagger-1">
             <span className="inline-block px-4 py-2 text-xs font-mono uppercase tracking-[0.2em] text-[#A3A3A3] border border-[#262626] bg-[#141414]/50 backdrop-blur-sm mb-8">
               Desarrollador web · Tepeapulco Hidalgo
             </span>
@@ -65,19 +65,18 @@ export default function HeroSection() {
 
           {/* Title - No animation for LCP optimization */}
           <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tighter mb-6">
-            Sistemas y páginas web que te traen
-            <br />
-            <span className="text-[#FF2A00]">citas, pedidos y ventas</span>
+            <span className="block text-balance">Sistemas y páginas web que te{'\u00A0'}traen</span>
+            <span className="block text-balance text-[#FF2A00]">citas, pedidos y ventas</span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-lg md:text-xl text-[#A3A3A3] max-w-2xl mx-auto mb-10 animate-fade-up opacity-0 stagger-2">
+          <p className="text-lg md:text-xl text-[#A3A3A3] max-w-2xl mx-auto mb-10 animate-fade-up stagger-2">
             Agenda en línea, pedidos por WhatsApp, punto de venta y tiendas en línea 
             para negocios de Hidalgo. <span className="text-white font-medium">+15 años de experiencia.</span>
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up opacity-0 stagger-3">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up stagger-3">
             <a
               href={`https://wa.me/${phone.replace(/\D/g, '')}?text=${whatsappMessage}`}
               target="_blank"
@@ -98,7 +97,7 @@ export default function HeroSection() {
           </div>
 
           {/* Tech Stack - Moved lower with proper spacing */}
-          <div className="mt-20 animate-fade-up opacity-0 stagger-4">
+          <div className="mt-20 animate-fade-up stagger-4">
             <p className="text-xs font-mono uppercase tracking-[0.2em] text-[#525252] mb-6">
               Stack Tecnológico
             </p>
@@ -114,11 +113,13 @@ export default function HeroSection() {
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Scroll Indicator - Below tech stack */}
+      {/* Scroll Indicator - anclado al fondo de la sección (no encima del stack) */}
+      <div className="hidden sm:flex absolute z-10 bottom-8 inset-x-0 justify-center pointer-events-none">
         <button
           onClick={scrollToServices}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[#525252] hover:text-[#FF2A00] transition-colors animate-fade-up opacity-0 stagger-5"
+          className="pointer-events-auto flex flex-col items-center gap-2 text-[#525252] hover:text-[#FF2A00] transition-colors animate-fade-up stagger-5"
           data-testid="hero-scroll-indicator"
           aria-label="Desplazarse a servicios"
         >

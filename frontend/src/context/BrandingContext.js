@@ -3,7 +3,7 @@ import axios from 'axios';
 import { API_URL } from '../lib/apiBase';
 
 export const DEFAULT_PAGE_TITLE =
-  'Desarrollador web y IoT en Tepeapulco Hidalgo | Daniel Ortega — Dany Solutions';
+  'DanySolutions | Desarrollo web, sistemas e IoT en Tepeapulco, Hidalgo — Daniel Ortega';
 
 function iconMimeFromHref(href) {
   const path = href.split(/[?#]/)[0].toLowerCase();
@@ -82,10 +82,8 @@ export function BrandingProvider({ children }) {
   }, [refresh]);
 
   useEffect(() => {
-    const title = profile?.name?.trim()
-      ? `${profile.name.trim()} | Desarrollador web Tepeapulco Hidalgo`
-      : DEFAULT_PAGE_TITLE;
-    document.title = title;
+    // El título de marca es fijo (DanySolutions); profile.name es la persona (Daniel Ortega).
+    document.title = DEFAULT_PAGE_TITLE;
 
     const logo = profile?.logo_url && String(profile.logo_url).trim();
     if (logo) {
