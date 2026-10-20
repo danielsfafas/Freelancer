@@ -542,7 +542,7 @@ async def startup_event():
             },
             {
                 "id": "proj-pancitapio",
-                "title": "Pancita Pio",
+                "title": "Pancita Los Netos",
                 "description": "Sistema de restaurante para taquería de carnitas: menú, comandas, caja, cocina y pedidos por WhatsApp con IA.",
                 "technologies": ["React", "Node.js", "PostgreSQL", "WhatsApp", "IA"],
                 "category": "web",
@@ -597,6 +597,13 @@ CONTENT_FIXES = [
     ("projects", "6a2c20cf-9b9d-4200-b83a-df54f16427e9", "description",
      "Pagina web para publicidad de sus productos.",
      "Página web para publicidad de sus productos."),
+    # Nombre del negocio confirmado por el usuario: "Pancita Los Netos".
+    ("projects", "proj-pancitapio", "title",
+     "Pancita Pio",
+     "Pancita Los Netos"),
+    ("testimonials", "206f596d-1d50-4de0-b1c5-ba17f2284f4f", "company",
+     "Pancita los NETOS",
+     "Pancita Los Netos"),
     ("testimonials", "46e81c8f-ea3d-4649-9e02-5faa39f03b3d", "content",
      "Daniel desarrolló nuestro sistema de gestión Citas. Su conocimiento técnico y profesionalismo superaron nuestras expectativas, El sistema nos ha ayudado para mejorar la atención a nuestros clientes llevando su historial clinico, haciendo la atención mas personalizada.",
      "Daniel desarrolló nuestro sistema de gestión de citas. Su conocimiento técnico y profesionalismo superaron nuestras expectativas. El sistema nos ha ayudado a mejorar la atención a nuestros clientes llevando su historial clínico, haciendo la atención más personalizada."),
