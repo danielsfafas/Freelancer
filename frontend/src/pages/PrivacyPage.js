@@ -169,6 +169,14 @@ export default function PrivacyPage() {
                     navegador, bloquear cookies o usar un bloqueador de contenido.
                   </p>
                   <AnalyticsOptOut />
+                  <p className="mt-4" data-testid="first-party-counter">
+                    <strong className="text-white">Contador de visitas propio:</strong> además, nuestro servidor
+                    cuenta de forma anónima las páginas visitadas (página, fecha, dominio de origen y tipo de
+                    dispositivo). No guardamos su dirección IP ni usamos cookies para esto: solo un código
+                    irreversible que cambia cada día, para estimar visitantes únicos. Si activa &quot;No
+                    rastrear&quot; o desactiva la analítica con el botón anterior, tampoco se cuentan sus visitas.
+                    Estos datos se conservan como máximo 13 meses.
+                  </p>
                   <p className="mt-4">
                     Consulta la <a href="https://posthog.com/privacy" target="_blank" rel="noopener noreferrer" 
                     className="text-[#FF2A00] hover:underline">Política de Privacidad de PostHog</a> para más información.
