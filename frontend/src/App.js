@@ -12,6 +12,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
 import ProductPage from "./pages/ProductPage";
+import { VisitTracker } from "./lib/visitTracker";
 
 // Admin Pages - Code-split for performance
 const AdminLoginPage = lazy(() => import("./pages/AdminLoginPage"));
@@ -21,6 +22,7 @@ const AdminAppointments = lazy(() => import("./pages/AdminAppointments"));
 const AdminMessages = lazy(() => import("./pages/AdminMessages"));
 const AdminReviews = lazy(() => import("./pages/AdminReviews"));
 const AdminSettings = lazy(() => import("./pages/AdminSettings"));
+const AdminVisits = lazy(() => import("./pages/AdminVisits"));
 const AdminLayout = lazy(() => import("./components/AdminLayout"));
 
 // Loading spinner component
@@ -127,6 +129,15 @@ function AppRoutes() {
         }
       />
 
+      <Route
+        path="/admin/visitas"
+        element={
+          <ProtectedRoute>
+            <AdminVisits />
+          </ProtectedRoute>
+        }
+      />
+
       {/* Catch all - 404 page */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
@@ -138,6 +149,7 @@ function App() {
     <BrowserRouter>
       <BrandingProvider>
         <AuthProvider>
+          <VisitTracker />
           <AppRoutes />
           <Toaster 
             position="top-right"
