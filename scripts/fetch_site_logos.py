@@ -13,7 +13,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 
 SITES = [
     ("podologia", "https://podologia.danysolutions.online/"),
-    ("rehabilita", "https://rehabilita.danysolutions.online/"),
+    ("rehabilita", "https://democitas.danysolutions.online/"),
     ("moralesbox", "https://moralesbox.danysolutions.online/"),
     ("lozmar", "https://lozmar.danysolutions.online/"),
     ("pancitapio", "https://pancitapio.danysolutions.online/"),

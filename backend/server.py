@@ -510,11 +510,11 @@ async def startup_event():
             {
                 "id": "proj-rehabilita",
                 "title": "Rehabilitá",
-                "description": "Plataforma web para clínica de fisioterapia con agenda de citas, servicios, productos y gestión administrativa.",
+                "description": "Plataforma web para clínica de fisioterapia con agenda de citas, servicios, productos y gestión administrativa. Nota: La versión de fisioterapia ahora está disponible en el demo de CitasCheck.",
                 "technologies": ["React", "FastAPI", "MongoDB", "WhatsApp"],
                 "category": "web",
                 "image_url": "/portfolio-logos/rehabilita.png",
-                "demo_url": "https://rehabilita.danysolutions.online/",
+                "demo_url": "https://democitas.danysolutions.online/",
                 "github_url": None,
                 "featured": True,
             },
