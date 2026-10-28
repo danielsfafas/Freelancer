@@ -15,7 +15,7 @@ const API_URL = process.env.REACT_APP_BACKEND_URL || '';
 const PROJECT_PRODUCT = {
   'proj-ambar': 'comandix',
   'proj-moralesbox': 'miembroscheck',
-  'proj-podologia': 'podologia',
+  'proj-podologia': 'citascheck',
   '0de5e656-0154-43f2-8ebd-f5b2b987d5cb': 'ventacheck',
 };
 

@@ -134,29 +134,28 @@ export const PRODUCTS = [
     ],
   },
   {
-    slug: 'podologia',
-    name: 'Podología',
-    tagline: 'Agenda, WhatsApp y expediente clínico para tu consultorio de podología.',
+    slug: 'citascheck',
+    name: 'CitasCheck',
+    tagline: 'Agenda, WhatsApp y expediente clínico para consultorios y clínicas.',
     audience:
-      'Consultorios y clínicas de podología que trabajan con cita y quieren dejar la libreta y los mensajes a mano.',
-    highlights: ['Citas en línea y por WhatsApp', 'Recordatorios automáticos', 'Expediente clínico con PDF'],
+      'Consultorios de podología, fisioterapia, psicología, nutrición y clínicas que trabajan con cita programada.',
+    highlights: ['Citas en línea y por WhatsApp', 'Recordatorios automáticos (en pruebas)', 'Expediente clínico con PDF'],
     video: `${VIDEO_BASE}/podologia.mp4`,
     poster: `${VIDEO_BASE}/podologia-poster.jpg`,
-    reference: { label: 'PodoclinicAM, Cd. Sahagún', url: 'https://podologia.danysolutions.online/' },
+    reference: { label: 'Demo CitasCheck', url: 'https://democitas.danysolutions.online/' },
     groups: [
       {
         title: 'Agenda',
         features: [
           { title: 'Citas en línea en 3 pasos', text: 'El paciente elige fecha, hora y deja sus datos; tú confirmas la cita.' },
-          { title: 'Agenda con Google Calendar', text: 'Vista por día, semana o mes sincronizada con Google Calendar, con horarios, duración de cita y días de cierre.' },
           { title: 'Citas por confirmar', text: 'Una bandeja para confirmar o cancelar solicitudes, con aviso y sonido cuando llega una nueva.' },
         ],
       },
       {
         title: 'WhatsApp',
         features: [
-          { title: 'Bot de recepción', text: 'Tus pacientes agendan, consultan horarios o cambian su cita por WhatsApp, con tu saludo e imagen.' },
-          { title: 'Confirmaciones y recordatorios', text: 'Mensajes automáticos al confirmar y recordatorios el día de la cita o minutos antes.' },
+          { title: 'Bot de recepción (en pruebas)', text: 'Tus pacientes agendan, consultan horarios o cambian su cita por WhatsApp, con tu saludo e imagen.' },
+          { title: 'Recordatorios automáticos (en pruebas)', text: 'Mensajes automáticos al confirmar y recordatorios el día de la cita o minutos antes.' },
         ],
       },
       {
@@ -214,6 +213,41 @@ export const PRODUCTS = [
       },
     ],
     notes: 'Pagos con tarjeta, CFDI y paquetería usan tus propias cuentas de Mercado Pago, Facturapi y T1 Envíos.',
+  },
+  {
+    slug: 'pizzascheck',
+    name: 'PizzasCheck',
+    tagline: 'Sistema de pedidos y entregas para pizzerías: en línea, por WhatsApp y punto de venta.',
+    audience:
+      'Pizzerías que toman pedidos a domicilio y para llevar, con uno o varios repartidores.',
+    highlights: ['Pedidos en línea y WhatsApp', 'Control de repartidores', 'Caja y reportes'],
+    video: null,
+    poster: null,
+    reference: { label: 'Demo PizzasCheck', url: 'https://pizzas.danysolutions.online/' },
+    groups: [
+      {
+        title: 'Pedidos',
+        features: [
+          { title: 'Pedidos en línea', text: 'Tu cliente arma su pedido desde el sitio web con tu menú, ingredientes y especialidades.' },
+          { title: 'Bot de WhatsApp', text: 'Toma pedidos por WhatsApp con menú digital, seguimiento en tiempo real y confirmación.' },
+          { title: 'Punto de venta', text: 'Registra pedidos para recoger o a domicilio desde el mostrador.' },
+        ],
+      },
+      {
+        title: 'Entregas',
+        features: [
+          { title: 'Control de repartidores', text: 'Asigna pedidos a tus repartidores con ruta en Google Maps y confirmación de entrega.' },
+          { title: 'Seguimiento en tiempo real', text: 'Tu cliente ve el estado de su pedido: en preparación, en camino o entregado.' },
+        ],
+      },
+      {
+        title: 'Gestión',
+        features: [
+          { title: 'Caja y corte', text: 'Cobra en efectivo, tarjeta o transferencia y cierra caja con esperado contra contado.' },
+          { title: 'Reportes de ventas', text: 'Ingresos por periodo, ticket promedio y pizzas más vendidas.' },
+        ],
+      },
+    ],
   },
 ];
 
