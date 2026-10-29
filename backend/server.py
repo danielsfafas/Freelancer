@@ -574,7 +574,47 @@ async def startup_event():
         inserted += 1
     logger.info("Portfolio seed: %s nuevos, %s ya existían (sin modificar)", inserted, len(portfolio_seed) - inserted)
 
+    await apply_rehabilita_url_fix()
     await apply_content_fixes()
+
+
+async def apply_rehabilita_url_fix():
+    """
+    Actualiza el proyecto Rehabilitá de forma idempotente si aún tiene la URL vieja.
+    Solo se aplica si demo_url es rehabilita.danysolutions.online.
+    No pisa otros cambios que el admin haya hecho desde el panel.
+    """
+    rehabilita = await db.projects.find_one({"id": "proj-rehabilita"})
+    if not rehabilita:
+        logger.info("Rehabilitá URL fix: proyecto no encontrado (skip)")
+        return
+    
+    current_url = rehabilita.get("demo_url", "")
+    if "rehabilita.danysolutions.online" not in current_url:
+        logger.info("Rehabilitá URL fix: URL ya actualizada o modificada por admin (skip)")
+        return
+    
+    # Actualizar solo demo_url y description, preservando otros cambios del admin
+    new_description = rehabilita.get("description", "")
+    if "CitasCheck" not in new_description:
+        # Solo añadir la nota si no está ya
+        new_description = new_description.rstrip(".") + ". Nota: La versión de fisioterapia ahora está disponible en el demo de CitasCheck."
+    
+    result = await db.projects.update_one(
+        {"id": "proj-rehabilita", "demo_url": {"$regex": "rehabilita\\.danysolutions\\.online"}},
+        {
+            "$set": {
+                "demo_url": "https://democitas.danysolutions.online/",
+                "description": new_description,
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            }
+        }
+    )
+    
+    if result.modified_count > 0:
+        logger.info("Rehabilitá URL fix: actualizado demo_url y descripción")
+    else:
+        logger.info("Rehabilitá URL fix: no se aplicó (ya actualizado o condiciones no cumplidas)")
 
 
 # Correcciones de ortografía en contenido editable desde el admin (revisión oct-2026).
