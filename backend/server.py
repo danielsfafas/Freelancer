@@ -16,6 +16,11 @@ import jwt
 from datetime import datetime, timezone, timedelta
 from bson import ObjectId
 import shutil
+import time
+from collections import deque
+
+import gate
+import visits
 
 ROOT_DIR = Path(__file__).parent
 
@@ -79,11 +84,18 @@ async def get_current_user(request: Request) -> dict:
             token = auth_header[7:]
     if not token:
         raise HTTPException(status_code=401, detail="Not authenticated")
+    return await user_from_token(token)
+
+async def user_from_token(token: str) -> dict:
     try:
         payload = jwt.decode(token, get_jwt_secret(), algorithms=[JWT_ALGORITHM])
         if payload.get("type") != "access":
             raise HTTPException(status_code=401, detail="Invalid token type")
-        user = await db.users.find_one({"_id": ObjectId(payload["sub"])})
+        try:
+            oid = ObjectId(payload["sub"])
+        except Exception:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        user = await db.users.find_one({"_id": oid})
         if not user:
             raise HTTPException(status_code=401, detail="User not found")
         return {
@@ -169,17 +181,34 @@ class ServiceUpdate(BaseModel):
     description: str
     icon: str
 
+# Login rate limit (en memoria, una sola instancia del backend)
+LOGIN_WINDOW_S = int(os.environ.get("LOGIN_WINDOW_S", "900"))
+LOGIN_MAX_PER_IP = int(os.environ.get("LOGIN_MAX_PER_IP", "10"))
+LOGIN_MAX_PER_EMAIL = int(os.environ.get("LOGIN_MAX_PER_EMAIL", "20"))
+_login_fail_ip: dict = {}
+_login_fail_email: dict = {}
+
+def _login_recent(store: dict, k: str, now: float) -> deque:
+    q = store.setdefault(k, deque())
+    while q and q[0] < now - LOGIN_WINDOW_S:
+        q.popleft()
+    return q
+
 # Auth Endpoints
 @api_router.post("/auth/login")
-async def login(request: LoginRequest, response: Response):
+async def login(request: LoginRequest, response: Response, http_request: Request):
     email = request.email.lower().strip()
+    ip = gate.client_ip(http_request)
+    now = time.time()
+    q_ip, q_email = _login_recent(_login_fail_ip, ip, now), _login_recent(_login_fail_email, email, now)
+    if len(q_ip) >= LOGIN_MAX_PER_IP or len(q_email) >= LOGIN_MAX_PER_EMAIL:
+        raise HTTPException(status_code=429, detail="Demasiados intentos. Intenta más tarde.")
+
     user = await db.users.find_one({"email": email})
-    
-    if not user:
+    if not user or not verify_password(request.password, user["password_hash"]):
+        q_ip.append(now); q_email.append(now)
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    
-    if not verify_password(request.password, user["password_hash"]):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+    q_ip.clear()
     
     user_id = str(user["_id"])
     access_token = create_access_token(user_id, email)
@@ -437,6 +466,14 @@ async def get_stats(user: dict = Depends(get_current_user)):
 async def root():
     return {"message": "Daniel Ortega Portfolio API", "status": "healthy"}
 
+# Portón (ESP32): /api/gate/*
+gate.configure(db, user_from_token)
+api_router.include_router(gate.router)
+
+# Contador de visitas propio y anónimo: /api/visits/*
+visits.configure(db, get_current_user)
+api_router.include_router(visits.router)
+
 # Include router
 app.include_router(api_router)
 
@@ -461,12 +498,20 @@ async def startup_event():
     await db.projects.create_index("id", unique=True)
     await db.appointments.create_index("id", unique=True)
     
-    # Seed admin
+    await db.gate_users.create_index("id", unique=True)
+    await db.gate_users.create_index("key_hash", unique=True)
+    await db.gate_log.create_index("start_epoch")
+    await visits.ensure_indexes(db)
+
+    # Seed admin: solo crea el admin si NO existe y ADMIN_PASSWORD está definido.
+    # Ya no hay contraseña por defecto ni se reescribe la contraseña en cada arranque.
     admin_email = os.environ.get("ADMIN_EMAIL", "admin@danielortega.com")
-    admin_password = os.environ.get("ADMIN_PASSWORD", "Admin123!")
+    admin_password = os.environ.get("ADMIN_PASSWORD", "")
     
     existing = await db.users.find_one({"email": admin_email})
-    if existing is None:
+    if existing is None and not admin_password:
+        logger.warning("No existe el admin %s y ADMIN_PASSWORD no está definido: no se crea.", admin_email)
+    elif existing is None:
         hashed = hash_password(admin_password)
         await db.users.insert_one({
             "email": admin_email,
@@ -476,23 +521,11 @@ async def startup_event():
             "created_at": datetime.now(timezone.utc).isoformat()
         })
         logger.info(f"Admin user created: {admin_email}")
-    elif not verify_password(admin_password, existing["password_hash"]):
+    elif admin_password and os.environ.get("ADMIN_PASSWORD_RESET", "").lower() in ("1", "true", "yes"):
+        # Recuperación explícita: poner ADMIN_PASSWORD_RESET=1 una vez, reiniciar y quitarlo.
         await db.users.update_one({"email": admin_email}, {"$set": {"password_hash": hash_password(admin_password)}})
-        logger.info("Admin password updated")
-    
-    # Write test credentials
-    memory_dir = Path("/app/memory")
-    memory_dir.mkdir(exist_ok=True)
-    with open(memory_dir / "test_credentials.md", "w") as f:
-        f.write(f"# Test Credentials\n\n")
-        f.write(f"## Admin User\n")
-        f.write(f"- Email: {admin_email}\n")
-        f.write(f"- Password: {admin_password}\n")
-        f.write(f"- Role: admin\n\n")
-        f.write(f"## Auth Endpoints\n")
-        f.write(f"- POST /api/auth/login\n")
-        f.write(f"- POST /api/auth/logout\n")
-        f.write(f"- GET /api/auth/me\n")
+        logger.warning("Admin password reset por ADMIN_PASSWORD_RESET")
+    # (Antes se escribía la contraseña en claro en /app/memory/test_credentials.md; se eliminó.)
     
     # Seed portfolio projects (clientes reales Dany Solutions)
     portfolio_seed = [

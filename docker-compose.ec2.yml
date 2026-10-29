@@ -30,7 +30,8 @@ services:
       JWT_SECRET: ${JWT_SECRET:-change-me-to-a-long-random-secret}
       FRONTEND_URL: ${FRONTEND_URL:-http://3.14.10.8:9000}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@danielortega.com}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin123!}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      GATE_DEVICE_SECRET: ${GATE_DEVICE_SECRET:-}
     volumes:
       - freelancer_ec2_backend_uploads:/app/uploads
     ports:
