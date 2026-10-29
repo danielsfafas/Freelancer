@@ -26,12 +26,17 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.danysolutions.online/productos/podologia</loc>
+    <loc>https://www.danysolutions.online/productos/citascheck</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.danysolutions.online/productos/ventacheck</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.danysolutions.online/productos/pizzascheck</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

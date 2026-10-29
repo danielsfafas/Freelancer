@@ -32,11 +32,44 @@ export default function ProductPage() {
 
   useEffect(() => {
     if (!product) return undefined;
-    // BrandingProvider fija el título al cargar el perfil; lo aplicamos después.
+    
+    // Títulos y descripciones específicas por producto
+    const seoData = {
+      comandix: {
+        title: 'Comandix: punto de venta para restaurantes y taquerías | DanySolutions',
+        description: 'Sistema de comandas, caja y pedidos por WhatsApp para restaurantes en Hidalgo. Comanda digital, QR en mesa, cocina en tiempo real y repartidores.'
+      },
+      miembroscheck: {
+        title: 'MiembrosCheck: control de gimnasios y academias | DanySolutions',
+        description: 'Sistema de pagos, asistencia y expedientes para gimnasios en Hidalgo. Semáforo de cobranza, reconocimiento facial y portal del alumno.'
+      },
+      ligafutbol: {
+        title: 'LigaFutbol: administra tu liga de fútbol completa | DanySolutions',
+        description: 'Software para ligas de fútbol en Hidalgo. Calendario automático, cobros por jornada, marcador en vivo y página pública del torneo.'
+      },
+      citascheck: {
+        title: 'CitasCheck: agenda y expediente para consultorios | DanySolutions',
+        description: 'Sistema de citas para consultorios en Hidalgo. Agenda en línea, WhatsApp, recordatorios y expediente clínico digital con PDF.'
+      },
+      ventacheck: {
+        title: 'VentaCheck: tienda en línea y punto de venta | DanySolutions',
+        description: 'Comercio electrónico e inventario para tiendas en Hidalgo. Catálogo web, punto de venta, CFDI y control por sucursal.'
+      },
+      pizzascheck: {
+        title: 'PizzasCheck: pedidos y entregas para pizzerías | DanySolutions',
+        description: 'Sistema de pedidos para pizzerías en Hidalgo. Órdenes en línea y WhatsApp, control de repartidores y caja.'
+      }
+    };
+
+    const seo = seoData[product.slug] || {
+      title: `${product.name}: funcionalidades | DanySolutions`,
+      description: `${product.name}: ${product.tagline}`
+    };
+    
     const timer = setTimeout(() => {
-      document.title = `${product.name}: funcionalidades | DanySolutions`;
+      document.title = seo.title;
     }, 0);
-    const previousDescription = setMetaDescription(`${product.name}: ${product.tagline}`);
+    const previousDescription = setMetaDescription(seo.description);
     return () => {
       clearTimeout(timer);
       document.title = DEFAULT_PAGE_TITLE;

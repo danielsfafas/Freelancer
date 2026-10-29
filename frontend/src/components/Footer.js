@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Github, Linkedin, MessageCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, MessageCircle } from 'lucide-react';
 import { useBranding } from '../context/BrandingContext';
 import BrandLogo from './BrandLogo';
 
@@ -23,31 +23,9 @@ export default function Footer() {
               <BrandLogo />
             </div>
             <p className="text-[#A3A3A3] text-sm leading-relaxed mb-6">
-              Daniel Ortega, desarrollador web e IoT en Tepeapulco, Hidalgo. Soluciones full stack
-              robustas y escalables para empresas del área Hidalgo y todo México.
+              DanySolutions — Sistemas web y software para negocios en Tepeapulco, Hidalgo y toda la región. 
+              Soluciones funcionales probadas en operación real.
             </p>
-            <div className="flex gap-4">
-              <a
-                href="https://github.com/danielortega"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-12 h-12 flex items-center justify-center border border-[#262626] hover:border-[#FF2A00] hover:text-[#FF2A00] transition-colors"
-                data-testid="footer-github"
-                aria-label="GitHub"
-              >
-                <Github className="w-6 h-6" />
-              </a>
-              <a
-                href="https://linkedin.com/in/danielortega"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-12 h-12 flex items-center justify-center border border-[#262626] hover:border-[#FF2A00] hover:text-[#FF2A00] transition-colors"
-                data-testid="footer-linkedin"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="w-6 h-6" />
-              </a>
-            </div>
           </div>
 
           {/* Quick Links */}
