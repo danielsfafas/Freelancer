@@ -2,17 +2,19 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, FolderKanban, Calendar, MessageSquare, 
-  Star, Settings, LogOut, Menu, X, Terminal, ChevronRight 
+  Star, Settings, LogOut, Menu, X, Terminal, ChevronRight, DoorOpen, BarChart3 
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useBranding, resolveMediaUrl } from '../context/BrandingContext';
 
 const navItems = [
   { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/admin/visitas', label: 'Visitas', icon: BarChart3 },
   { path: '/admin/projects', label: 'Proyectos', icon: FolderKanban },
   { path: '/admin/reviews', label: 'Reseñas', icon: Star },
   { path: '/admin/appointments', label: 'Citas', icon: Calendar },
   { path: '/admin/messages', label: 'Mensajes', icon: MessageSquare },
+  { path: '/admin/porton', label: 'Portón', icon: DoorOpen, adminOnly: true },
   { path: '/admin/settings', label: 'Configuración', icon: Settings },
 ];
 
@@ -75,7 +77,7 @@ export default function AdminLayout({ children }) {
 
         {/* Navigation */}
         <nav className="p-4 space-y-1">
-          {navItems.map((item) => {
+          {navItems.filter((item) => !item.adminOnly || user?.role === 'admin').map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
             return (

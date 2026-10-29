@@ -43,7 +43,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       FRONTEND_URL: ${FRONTEND_URL:-https://www.danysolutions.online}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@danielortega.com}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin123!}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
     volumes:
       - backend_uploads:/app/uploads
     networks:

@@ -12,6 +12,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
 import ProductPage from "./pages/ProductPage";
+import { VisitTracker } from "./lib/visitTracker";
 
 // Admin Pages - Code-split for performance
 const AdminLoginPage = lazy(() => import("./pages/AdminLoginPage"));
@@ -22,6 +23,9 @@ const AdminMessages = lazy(() => import("./pages/AdminMessages"));
 const AdminReviews = lazy(() => import("./pages/AdminReviews"));
 const AdminSettings = lazy(() => import("./pages/AdminSettings"));
 const AdminLayout = lazy(() => import("./components/AdminLayout"));
+const AdminGate = lazy(() => import("./pages/AdminGate"));
+const PortonPage = lazy(() => import("./pages/PortonPage"));
+const AdminVisits = lazy(() => import("./pages/AdminVisits"));
 
 // Loading spinner component
 const LoadingSpinner = () => (
@@ -60,6 +64,14 @@ function AppRoutes() {
       <Route path="/privacidad" element={<PrivacyPage />} />
       <Route path="/terminos" element={<TermsPage />} />
       <Route path="/productos/:slug" element={<ProductPage />} />
+      <Route
+        path="/porton"
+        element={
+          <Suspense fallback={<LoadingSpinner />}>
+            <PortonPage />
+          </Suspense>
+        }
+      />
       
       {/* Admin Login */}
       <Route 
@@ -127,6 +139,24 @@ function AppRoutes() {
         }
       />
 
+      <Route
+        path="/admin/visitas"
+        element={
+          <ProtectedRoute>
+            <AdminVisits />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/porton"
+        element={
+          <ProtectedRoute>
+            <AdminGate />
+          </ProtectedRoute>
+        }
+      />
+
       {/* Catch all - 404 page */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
@@ -138,6 +168,7 @@ function App() {
     <BrowserRouter>
       <BrandingProvider>
         <AuthProvider>
+          <VisitTracker />
           <AppRoutes />
           <Toaster 
             position="top-right"
