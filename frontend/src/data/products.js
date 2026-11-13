@@ -249,6 +249,86 @@ export const PRODUCTS = [
       },
     ],
   },
+  {
+    slug: 'farmaciacheck',
+    name: 'FarmaciaCheck',
+    tagline: 'El sistema para farmacias: caja, lotes y caducidades, genéricos y tienda web.',
+    audience:
+      'Farmacias que venden en mostrador y en línea, con control de lotes, caducidades y sucursales.',
+    highlights: ['Caja con búsqueda y fotos del producto', 'Lotes y caducidades FEFO', 'Genéricos por sustancia activa'],
+    video: `${VIDEO_BASE}/farmaciacheck.mp4`,
+    poster: `${VIDEO_BASE}/farmaciacheck-poster.jpg`,
+    reference: { label: 'Demo FarmaciaCheck', url: 'https://farmaciacheck.danysolutions.online/' },
+    groups: [
+      {
+        title: 'Caja',
+        features: [
+          { title: 'Punto de venta con búsqueda y fotos', text: 'Encuentra el producto al escribir y lo ves con foto, para cobrar más rápido y con menos errores.' },
+          { title: 'Venta con receta para antibióticos', text: 'Registra la receta cuando la venta lo requiere, para cumplir con la dispensación de antibióticos.' },
+          { title: 'Monedero y ticket con tu logo', text: 'Aplica monedero al cobrar e imprime el ticket con el logo de tu farmacia.' },
+        ],
+      },
+      {
+        title: 'Inventario',
+        features: [
+          { title: 'Genéricos y equivalentes', text: 'Consulta genéricos y equivalentes por sustancia activa al momento de la venta.' },
+          { title: 'Lotes y caducidades FEFO', text: 'Descuenta primero lo que caduca antes, con alertas de stock mínimo y de caducidad.' },
+        ],
+      },
+      {
+        title: 'Tienda y sucursales',
+        features: [
+          { title: 'Tienda web con fotos', text: 'Catálogo en línea con fotos de tus productos, visible para tus clientes.' },
+          { title: 'Dashboard y sucursales', text: 'Sigue ventas e inventario por sucursal desde un solo panel.' },
+        ],
+      },
+      {
+        title: 'Compras',
+        features: [
+          { title: 'Compras a proveedores', text: 'Registra la recepción por lote, con caducidad, para que el inventario quede listo para vender.' },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'viajescheck',
+    name: 'ViajesCheck',
+    tagline: 'El sistema para agencias de viajes: destinos, asientos, anticipos y WhatsApp con IA.',
+    audience:
+      'Agencias de viajes que venden tours y salidas en autobús o avión, con anticipos, abonos y atención por WhatsApp.',
+    highlights: ['Galerías y videos de destinos', 'Asientos de autobús y viajes en avión', 'Anticipos, abonos y WhatsApp con IA'],
+    video: `${VIDEO_BASE}/viajescheck.mp4`,
+    poster: `${VIDEO_BASE}/viajescheck-poster.jpg`,
+    groups: [
+      {
+        title: 'Tu página web',
+        features: [
+          { title: 'Galerías y videos de destinos', text: 'Muestra cada destino con fotos y videos para que tu cliente vea el viaje antes de reservar.' },
+        ],
+      },
+      {
+        title: 'Reservaciones',
+        features: [
+          { title: 'Asientos de autobús', text: 'Elige y bloquea asientos en el mapa del autobús, para ver ocupados y libres en cada salida.' },
+          { title: 'Viajes en avión', text: 'Administra también salidas en avión, no solo los viajes por carretera.' },
+        ],
+      },
+      {
+        title: 'Pagos',
+        features: [
+          { title: 'Anticipo con tarjeta', text: 'Cobra un anticipo con tarjeta, con el porcentaje configurable, y el resto lo vas abonando después.' },
+          { title: 'Abonos y saldos', text: 'Registra abonos, consulta el saldo de cada cliente y envía recordatorios.' },
+        ],
+      },
+      {
+        title: 'WhatsApp',
+        features: [
+          { title: 'Asistente con IA para clientes', text: 'Tus clientes pueden resolver dudas y dar seguimiento por WhatsApp, con un asistente de IA.' },
+          { title: 'El administrador registra abonos', text: 'Desde WhatsApp, el administrador puede registrar abonos y dejar constancia del pago.' },
+        ],
+      },
+    ],
+  },
 ];
 
 export const getProduct = (slug) => PRODUCTS.find((p) => p.slug === slug);
