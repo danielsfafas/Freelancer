@@ -58,6 +58,14 @@ export default function ProductPage() {
       pizzascheck: {
         title: 'PizzasCheck: pedidos y entregas para pizzerías | DanySolutions',
         description: 'Sistema de pedidos para pizzerías en Hidalgo. Órdenes en línea y WhatsApp, control de repartidores y caja.'
+      },
+      farmaciacheck: {
+        title: 'FarmaciaCheck: sistema para farmacias | DanySolutions',
+        description: 'Sistema para farmacias en Hidalgo. Caja con fotos, genéricos por sustancia activa, lotes y caducidades FEFO, receta para antibióticos y tienda web.'
+      },
+      viajescheck: {
+        title: 'ViajesCheck: sistema para agencias de viajes | DanySolutions',
+        description: 'Sistema para agencias de viajes en Hidalgo. Galerías de destinos, asientos de autobús y avión, anticipos configurables, abonos y WhatsApp con IA.'
       }
     };
 

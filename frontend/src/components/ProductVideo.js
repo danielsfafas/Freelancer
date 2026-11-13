@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Play, ShoppingBag, Dumbbell, Footprints, Trophy, UtensilsCrossed } from 'lucide-react';
+import { Play, ShoppingBag, Dumbbell, Footprints, Trophy, UtensilsCrossed, Pill, Plane } from 'lucide-react';
 
 export const PRODUCT_ICONS = {
   comandix: UtensilsCrossed,
@@ -7,6 +7,8 @@ export const PRODUCT_ICONS = {
   ligafutbol: Trophy,
   podologia: Footprints,
   ventacheck: ShoppingBag,
+  farmaciacheck: Pill,
+  viajescheck: Plane,
 };
 
 /**
