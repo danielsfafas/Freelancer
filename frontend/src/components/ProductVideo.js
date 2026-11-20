@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { Play, ShoppingBag, Dumbbell, Footprints, Trophy, UtensilsCrossed, Pill, Plane } from 'lucide-react';
+import { Play, ShoppingBag, Dumbbell, Footprints, Trophy, UtensilsCrossed, Pill, Plane, CalendarCheck, Pizza } from 'lucide-react';
 
 export const PRODUCT_ICONS = {
   comandix: UtensilsCrossed,
   miembroscheck: Dumbbell,
   ligafutbol: Trophy,
   podologia: Footprints,
+  citascheck: CalendarCheck,
   ventacheck: ShoppingBag,
+  pizzascheck: Pizza,
   farmaciacheck: Pill,
   viajescheck: Plane,
 };
