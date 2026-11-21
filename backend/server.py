@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
+import visits
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field, EmailStr
@@ -438,6 +439,10 @@ async def root():
     return {"message": "Daniel Ortega Portfolio API", "status": "healthy"}
 
 # Include router
+# Contador de visitas propio y anónimo: /api/visits/*
+visits.configure(db, get_current_user)
+api_router.include_router(visits.router)
+
 app.include_router(api_router)
 
 # CORS
@@ -460,6 +465,7 @@ async def startup_event():
     await db.users.create_index("email", unique=True)
     await db.projects.create_index("id", unique=True)
     await db.appointments.create_index("id", unique=True)
+    await visits.ensure_indexes(db)
     
     # Seed admin
     admin_email = os.environ.get("ADMIN_EMAIL", "admin@danielortega.com")

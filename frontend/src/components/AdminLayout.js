@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, FolderKanban, Calendar, MessageSquare, 
-  Star, Settings, LogOut, Menu, X, Terminal, ChevronRight 
+  Star, Settings, LogOut, Menu, X, Terminal, ChevronRight, BarChart3 
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useBranding, resolveMediaUrl } from '../context/BrandingContext';
 
 const navItems = [
   { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/admin/visitas', label: 'Visitas', icon: BarChart3 },
   { path: '/admin/projects', label: 'Proyectos', icon: FolderKanban },
   { path: '/admin/reviews', label: 'Reseñas', icon: Star },
   { path: '/admin/appointments', label: 'Citas', icon: Calendar },
